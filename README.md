@@ -1,6 +1,8 @@
 # AI-Based Multi-Model System for Liver Disease Risk Assessment
 
-An integrated AI ecosystem designed to assess liver health through a pipeline of machine learning models and clinical rule-based logic. The system diagnoses **Hepatitis C**, screens for **Blood Donor Eligibility**, detects **Fatty Liver Disease (NAFLD)**, and predicts **Liver Cancer Risk**.
+An integrated AI ecosystem designed to assess liver health through a pipeline of machine learning models and clinical rule-based logic. 
+
+The system leverages **Hepatitis C** clinical data to diagnose liver damage progression, specifically identifying **Fibrosis** and its critical end-stage, **Cirrhosis**, using a **Multi-Stage Classification System** (Stage 1 to 4). Additionally, the pipeline screens for **Blood Donor Eligibility**, detects **Fatty Liver Disease (NAFLD)**, and predicts **Liver Cancer Risk**.
 
 ## 📂 Repository Structure
 
