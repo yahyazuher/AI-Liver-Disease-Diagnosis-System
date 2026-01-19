@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import pickle
 
-# --- 🧪 Virtual Clinic: Testing the Liver Cancer Model ---
 
 def test_model_validity():
     # 1. Load the trained model
