@@ -1,4 +1,4 @@
- Medical Background: Liver Disease Overview
+ Medical Background: Liver Disease Overview 
 
 This system is designed to navigate the complex progression of liver pathologies. To understand the logic of our models, it is essential to distinguish between the different types of liver stressors.
 
