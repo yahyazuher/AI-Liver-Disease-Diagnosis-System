@@ -6,18 +6,18 @@ This document outlines the ethical framework governing the **Multi-Model AI Live
 
 ## 1. The "Veto System": An Ethical Necessity for Blood Safety
 
-In medical AI, a "False Negative" (classifying a sick patient as healthy) is not just a statistical error; it is a life-threatening risk. [cite_start]This project implements a **Veto System** specifically for the Blood Donor Eligibility module to mitigate this risk[cite: 19].
+In medical AI, a "False Negative" (classifying a sick patient as healthy) is not just a statistical error; it is a life-threatening risk. This project implements a **Veto System** specifically for the Blood Donor Eligibility module to mitigate this risk.
 
 ### The Ethical Dilemma
-The **Donor Model** relies on biochemical markers. In scenarios where a user lacks specific input values (e.g., ALT, GGT), the system might use default "normal" values to process the request. [cite_start]This creates a risk where the Donor Model incorrectly classifies a candidate as "Eligible"[cite: 20].
+The **Donor Model** relies on biochemical markers. In scenarios where a user lacks specific input values (e.g., ALT, GGT), the system might use default "normal" values to process the request. This creates a risk where the Donor Model incorrectly classifies a candidate as "Eligible".
 
 ### The Solution: Cross-Model Validation
-[cite_start]We enforce a strict rule: **"The models must not act in isolation."**[cite: 18].
+We enforce a strict rule: **"The models must not act in isolation."**.
 The system integrates the **Fibrosis Model** as a supervisor (Veto Authority) over the Donor Model based on the following logic:
 
-1.  [cite_start]**Independent Analysis:** The Fibrosis Model analyzes different features, specifically **Platelets** and **Prothrombin**, which are critical indicators of liver scarring[cite: 21, 63].
-2.  [cite_start]**Conflict Resolution:** If the Donor Model predicts "Eligible" (0), but the Fibrosis Model detects advanced scarring (Stage 2, 3, or 4), the system detects a conflict[cite: 22].
-3.  **The Veto Action:** The system automatically overrides the Donor Model's decision, changing the status to **"Rejected"**. [cite_start]This ensures that blood from a patient with hidden liver fibrosis never reaches a recipient[cite: 18, 22].
+1.  **Independent Analysis:** The Fibrosis Model analyzes different features, specifically **Platelets** and **Prothrombin**, which are critical indicators of liver scarring.
+2.  **Conflict Resolution:** If the Donor Model predicts "Eligible" (0), but the Fibrosis Model detects advanced scarring (Stage 2, 3, or 4), the system detects a conflict.
+3.  **The Veto Action:** The system automatically overrides the Donor Model's decision, changing the status to **"Rejected"**. This ensures that blood from a patient with hidden liver fibrosis never reaches a recipient.
 
 
 ---
@@ -27,18 +27,18 @@ The system integrates the **Fibrosis Model** as a supervisor (Veto Authority) ov
 Respecting patient confidentiality is paramount. This project adheres to strict de-identification protocols to ensure the AI learns biological patterns, not personal identities.
 
 ### Handling of Personally Identifiable Information (PII)
-* **Removal of Explicit Identifiers:** The raw dataset contained a sequence number (`SEQN`) for each patient. [cite_start]While this was used initially as a **Primary Key** to merge disparate datasets (Biochemistry, CBC, Cholesterol)[cite: 53, 54], it was strictly treated as an engineering utility.
-* [cite_start]**The "Drop" Protocol:** Before the data enters the training phase (`.fit`), the `SEQN` column is programmatically dropped[cite: 55]. [cite_start]The model acts purely on mathematical arrays of biological data[cite: 26], ensuring it is impossible to reverse-engineer the data to identify specific individuals.
+* **Removal of Explicit Identifiers:** The raw dataset contained a sequence number (`SEQN`) for each patient. [cite_start]While this was used initially as a **Primary Key** to merge disparate datasets (Biochemistry, CBC, Cholesterol), it was strictly treated as an engineering utility.
+* **The "Drop" Protocol:** Before the data enters the training phase (`.fit`), the `SEQN` column is programmatically dropped. The model acts purely on mathematical arrays of biological data, ensuring it is impossible to reverse-engineer the data to identify specific individuals.
 * **Attribute Encoding:** Demographic attributes like Gender (Sex) were converted to numerical binary formats (Male=1, Female=0) purely for statistical correlation, stripping away text-based identifiers .
 
 ---
 
 ## 3. Responsible Labeling: Guideline-Based Ground Truth
 
-To avoid "AI Hallucinations," the target variables for the **Fatty Liver Model** were not inferred loosely. [cite_start]Instead, we applied a **Rule-Based Labeling** approach grounded in clinical guidelines[cite: 109].
+To avoid "AI Hallucinations," the target variables for the **Fatty Liver Model** were not inferred loosely. Instead, we applied a **Rule-Based Labeling** approach grounded in clinical guidelines.
 
-* [cite_start]**Clinical Thresholds:** Diagnoses were established using globally recognized thresholds (e.g., ALT > 40 IU/L, Triglycerides > 150 mg/dL) derived from medical literature[cite: 110].
-* [cite_start]**Justification:** This ensures that the AI's training data reflects established medical science rather than arbitrary patterns, creating a model that is interpretable and defensible in a clinical setting[cite: 112, 116].
+* **Clinical Thresholds:** Diagnoses were established using globally recognized thresholds (e.g., ALT > 40 IU/L, Triglycerides > 150 mg/dL) derived from medical literature.
+* **Justification:** This ensures that the AI's training data reflects established medical science rather than arbitrary patterns, creating a model that is interpretable and defensible in a clinical setting.
 
 ---
 
