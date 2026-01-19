@@ -50,7 +50,7 @@ Rule-Based Detection: Our system focuses on the Biochemical Footprint (ALT, GGT,
 
 Metabolic Indicators: High levels of lipids and inflammation markers serve as a 95% accurate indicator of fatty liver without the need for physical biopsy.
 
-4. Liver Cancer Risk (سرطان الكبد)
+4. Liver Cancer Risk 
    
 This module evaluates the probability of Hepatocellular Carcinoma based on 7 distinct pathological states.
 
