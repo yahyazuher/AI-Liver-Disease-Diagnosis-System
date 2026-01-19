@@ -37,9 +37,12 @@ Respecting patient confidentiality is paramount. This project adheres to strict 
 
 To avoid "AI Hallucinations," the target variables for the **Fatty Liver Model** were not inferred loosely. Instead, we applied a **Rule-Based Labeling** approach grounded in clinical guidelines.
 
-* **Clinical Thresholds:** Diagnoses were established using globally recognized thresholds (e.g., ALT > 40 IU/L, Triglycerides > 150 mg/dL) derived from medical literature.
-* **Justification:** This ensures that the AI's training data reflects established medical science rather than arbitrary patterns, creating a model that is interpretable and defensible in a clinical setting.
-
+* **Clinical Thresholds:** Diagnoses were established using globally recognized thresholds derived from medical literature:
+    * **ALT > 40 IU/L:** Indicator of hepatocellular injury (ACG Guidelines).
+    * **Triglycerides > 150 mg/dL:** Indicator of metabolic syndrome (NCEP ATP III).
+    * **GGT > 40 IU/L:** A sensitive marker for oxidative stress and fatty liver detection.
+* **Justification:** The diagnosis is assigned only when biochemical markers confirm both lipid elevation and liver stress, creating a model that is clinically defensible.
+* 
 ---
 
 **Disclaimer:** This system is designed as a decision-support tool and does not replace professional medical diagnosis. The "Veto System" acts as a computational safeguard, not a guarantee of clinical safety.
