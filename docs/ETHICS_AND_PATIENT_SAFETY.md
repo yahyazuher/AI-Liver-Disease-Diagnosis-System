@@ -1,4 +1,160 @@
-# Ethical Considerations & Patient Safety Protocols
+# Ethics & Patient Safety
+
+This document explains the **ethical principles and safety mechanisms** used in the  
+**Multi-Model AI Liver Disease System**.
+
+The goal is to clarify **why** specific design decisions were made to protect patients,
+reduce medical risk, and prevent unsafe AI behavior.
+
+>  Technical details, training logic, and datasets are documented separately under `docs/`
+> and `data/processed/` to keep this file focused on ethics and safety only.
+
+---
+
+## Core Ethical Principles
+
+- **Patient safety comes first**
+- **False Negatives are treated as critical failures**
+- **No model is allowed to act alone**
+- **Uncertainty leads to conservative decisions**
+- **AI supports clinicians — it does not replace them**
+
+---
+
+## 1. False Negatives as a High-Risk Ethical Failure
+
+In medical AI, not all errors are equal.
+
+A **False Negative** (classifying a sick or high-risk patient as healthy) can lead to:
+- Delayed diagnosis
+- Unsafe blood donation
+- Direct harm to other patients
+
+For this reason, the system is intentionally designed to be **risk-averse**, prioritizing
+safety over optimistic predictions.
+
+---
+
+## 2. The Veto System (Fail-Safe Architecture)
+
+### Why a Veto System?
+Some models rely on biochemical markers that may be:
+- Missing
+- Incomplete
+- Replaced with default values
+
+Allowing such models to make final medical decisions **without supervision** was considered
+ethically unsafe.
+
+### How It Works
+The system applies **cross-model oversight**:
+
+- A *primary model* may issue a favorable decision.
+- A *supervisory model* independently evaluates structural or high-risk indicators.
+- If a conflict is detected, the permissive decision is **automatically overridden**.
+
+This guarantees that **safety always dominates model autonomy**.
+
+📄 Related documentation:
+- `docs/Fibrosis_Model.md`
+- `docs/Donor_Eligibility_Model.md`
+
+---
+
+## 3. Example: Fatty Liver & Blood Donation Safety
+
+This project contains multiple models.  
+The following example illustrates the ethical logic using **one model only**.
+
+### Scenario
+- The donor model predicts **Eligible**
+- Some biochemical inputs were missing or defaulted
+- The fibrosis model detects **Stage ≥ 2** using Platelets / Prothrombin
+
+### Ethical Outcome
+- The system triggers the **Veto**
+- The donor status is changed to **Rejected**
+- Potential harm is prevented
+
+📄 Model details:
+- `docs/FattyLiver_Model.md`  
+- Training data: `data/processed/FattyLiver_Learning_db.csv`
+
+---
+
+## 4. Unified Input & Accountability
+
+### Design Choice
+The frontend sends **one unified JSON payload** containing all user data.
+
+### Ethical Benefit
+- Prevents selective input manipulation
+- Ensures all models analyze the same clinical snapshot
+- Improves traceability and accountability
+
+---
+
+## 5. Data Privacy & De-Identification
+
+Patient privacy is treated as a **hard constraint**, not an optional feature.
+
+### Applied Measures
+- Engineering identifiers (e.g. `SEQN`) are used **only for data merging**
+- All identifiers are dropped **before training**
+- Models operate on numerical arrays only
+- No personal identity can be reconstructed
+
+📄 Data handling details:
+- `docs/FattyLiver_DataEngineering.md`
+- `data/processed/`
+
+---
+
+## 6. Guideline-Based Labeling (No Heuristic Diagnosis)
+
+All target labels are created using **rule-based labeling** grounded in
+established clinical guidelines.
+
+### Why This Matters
+- Prevents speculative AI decisions
+- Makes predictions explainable
+- Ensures clinical defensibility
+
+📄 Labeling logic:
+- `docs/FattyLiver_Model.md`
+
+---
+
+## 7. Avoiding Genetic Determinism
+
+The system is explicitly designed to avoid **fatalistic predictions**.
+
+- Genetic risk increases probability — not certainty
+- Lifestyle factors can amplify or reduce risk
+- Protective behavior is treated as an ethical modifier
+
+This ensures **non-discrimination** and preserves patient agency.
+
+📄 Related model:
+- `docs/Cancer_Risk_Model.md`
+
+---
+
+## 8. Scope & Responsibility
+
+This system is a **clinical decision-support tool** only.
+
+- It does **not** replace medical professionals
+- The Veto System is a computational safeguard, not a guarantee
+- Final responsibility always lies with qualified clinicians
+
+---
+
+## Final Statement
+
+> When uncertainty exists, the system chooses **refusal over reassurance**.
+>  
+> Safety is enforced by design — not left to model confidence.
 
 This document outlines the ethical framework governing the **Multi-Model AI Liver Disease Diagnostic System**, emphasizing patient safety, data privacy, and the fail-safe mechanisms implemented to prevent medical errors.
 
