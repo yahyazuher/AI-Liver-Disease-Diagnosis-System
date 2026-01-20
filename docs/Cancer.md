@@ -1,5 +1,5 @@
 Liver Cancer Risk Assessment Model
-نموذج تقييم مخاطر سرطان الكبد
+
 This module evaluates the probability of developing Hepatocellular Carcinoma by analyzing the interplay between genetic predisposition and environmental triggers.
 
 1. Dataset Overview
@@ -8,9 +8,7 @@ Source: The_Cancer_data_1500.csv.
 
 Original Dataset: This data was obtained from the "Cancer Prediction Dataset" on Kaggle (by Rabie El Kharoua).
 
-
 URL: https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset?resource=download
-
 
 Size: 1,500 patient records.
 
