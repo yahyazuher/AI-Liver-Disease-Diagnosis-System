@@ -86,21 +86,21 @@ model = xgb.XGBClassifier(
 > **Scientific Insight:** For a dataset of 1,500 records, a `max_depth` of **3** provides the optimal balance between "learning" and "generalizing." This prevents the model from becoming too rigid, ensuring the system remains robust and reliable when encountering new patients in a real-world clinical setting.
 
 ---
-### 4- Virtual Clinic Test Results
+### 4. Virtual Clinic Test Results
 
-To demonstrate the practical application of the model, a "Virtual Clinic" simulation was conducted. This phase serves as a real-world test of the Model Logic, moving beyond raw training metrics. **7 clinical scenarios** reflecting societal realities were designed. The results demonstrated the model's accuracy in comprehending the interaction between behavior, age, and genetics.
+To demonstrate the practical application of the model, a **"Virtual Clinic"** simulation was conducted. This phase serves as a real-world validation of the Model Logic, moving beyond raw training metrics. **7 clinical scenarios** reflecting diverse societal realities were designed to test the model's accuracy in comprehending the complex interaction between behavior, age, and genetics.
 
 ### Virtual Case Analysis Table
 
 | Clinical Case | Brief Description | Result | Risk % | Clinical Interpretation |
 | --- | --- | --- | --- | --- |
-| **1. The Athletic Youth** | 25 years old, high physical activity, no triggers. | **🟢 Healthy** | **1.3%** | Reference case for biosafety. |
-| **2. The Heavy Smoker** | 55 years old, continuous smoking and alcohol use. | **🔴 High Risk** | **99.8%** | Cumulative effect of environmental toxins. |
-| **3. High Genetics / Healthy Life** | High Genetic Risk, but ideal lifestyle. | **🟢 Healthy** | **17.4%** | **Key Result:** Lifestyle neutralized genetic risk. |
-| **4. The Catastrophic Case** | Morbid obesity, alcohol, smoking, genetics, old age. | **🔴 High Risk** | **99.9%** | Confluence of all carcinogenic factors. |
-| **5. Obesity Only** | BMI 40, no smoking or alcohol. | **🟢 Healthy** | **12.6%** | Obesity is a risk factor but less severe than smoking. |
-| **6. The Healthy Elderly** | 80 years old, athletic, non-smoker. | **🟢 Healthy** | **0.8%** | Age is not a direct cause of cancer without triggers. |
-| **7. The Borderline Case** | Moderate risks across most factors. | **🟢 Healthy** | **2.7%** | Model's ability to distinguish stable cases. |
+| **1. The Athletic Youth** | 25y, high physical activity, no triggers. | **🟢 Healthy** | **0.61%** | Baseline reference for a low-risk profile. |
+| **2. The Heavy Smoker** | 55y, chronic smoking/alcohol use. | **🔴 High Risk** | **99.82%** | Clear impact of continuous environmental toxins. |
+| **3. Genetics vs. Lifestyle** | High Genetic Risk, but ideal lifestyle. | **🟢 Healthy** | **45.80%** | **Key Result:** Lifestyle effectively balanced high genetic risk. |
+| **4. The Catastrophic Case** | Multiple risks, obesity, and old age. | **🔴 High Risk** | **99.98%** | Confluence of all major carcinogenic factors. |
+| **5. Obesity Only** | BMI 40, non-smoker, active. | **🟢 Healthy** | **12.45%** | Obesity is a risk but secondary to lifestyle habits. |
+| **6. The Healthy Elderly** | 80y, athletic, non-smoker. | **🟢 Healthy** | **0.94%** | Age is not a standalone trigger without toxins. |
+| **7. The Borderline Case** | Moderate risks across most factors. | **🟢 Healthy** | **5.42%** | Demonstrates model stability in moderate scenarios. |
 
 ---
 
@@ -108,21 +108,20 @@ To demonstrate the practical application of the model, a "Virtual Clinic" simula
 
 Based on the Virtual Clinic outputs, three critical technical observations regarding the model can be derived:
 
-#### **A. Resilience of the "Healthy Elderly" (Case 6):**
+#### **A. Resilience of the "Healthy Elderly" (Case 6)**
 
-The model assigned the lowest risk percentage (**0.8%**) to an 80-year-old individual. This proves that the model does not treat "Age" as a death sentence; instead, it assigned higher weights to **Physical Activity** and **Non-Smoking**.
+The model assigned an exceptionally low risk percentage (**0.94%**) to an 80-year-old individual. This proves that the system does not treat "Age" as a primary cause of disease; instead, it assigns much higher weights to **Physical Activity** and **Non-Smoking**, **rewarding long-term healthy habits** .
 
-#### **B. Decoupling Genetics from Disease (Case 3):**
+#### **B. Decoupling Genetics from Disease (Case 3)**
 
-When a patient with high genetics (GeneticRisk = 2) but a healthy lifestyle was introduced, the result was **17.4%** (50% below the risk threshold). This confirms that the `cancer_model.pkl` file has learned that genetics represent a "predisposition," not an "inevitable fate."
+When a patient with high genetic predisposition (`GeneticRisk = 2`) and family history but an ideal lifestyle was introduced, the model returned **45.80%**. While this is higher than the baseline, it remains below the **50% diagnostic threshold**. This confirms the `cancer_model.pkl` file has learned that genetics represent a "vulnerability" rather than an "inevitable fate," provided preventive measures are strictly followed.
 
-#### **C. The Lethal Weight of Toxins (Case 2 & 4):**
+#### **C. The Lethal Weight of Toxins (Case 2 & 4)**
 
-Once smoking and alcohol entered the equation, the risk percentage immediately spiked above **99%**. This reflects the **High Weights** assigned by the **XGBoost** system to these specific factors during its training on 1,200 patients.
+The data confirms that environmental triggers are the primary drivers of risk. Once heavy smoking and alcohol consumption are introduced, the risk probability immediately spikes above **99%**. This reflects the **high feature importance** assigned by the **XGBoost** algorithm to toxins over all other variables(more info: docs/XGBoost).
 
 ---
-
-# 5- Technical Note for Developers (Testing Logic)
+# 5- Technical Note for Developers 
 
 Execution: These tests were conducted using the code/test_cancer_model.py file. 
 
