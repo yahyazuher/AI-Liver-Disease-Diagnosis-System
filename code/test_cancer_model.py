@@ -1,56 +1,68 @@
 import pandas as pd
-import numpy as np
-import pickle
+import joblib
+import os
 
-
-def test_model_validity():
-    # 1. Load the trained model
-    model_name = "Liver_Cancer_Model.pkl"
-    try:
-        with open(model_name, "rb") as file:
-            model = pickle.load(file)
-        print(f"✅ Model '{model_name}' loaded successfully.\n")
-    except FileNotFoundError:
-        print(f"❌ Error: {model_name} not found. Please train and save the model first.")
-        return
-
-    # 2. Define 7 Diverse Patient Scenarios (The 7 Cases) 
-    # Features Order: Age, Gender, BMI, Smoking, GeneticRisk, PhysicalActivity, AlcoholIntake, CancerHistory
-    # Note: Gender (0=Male, 1=Female), Smoking/History (0=No, 1=Yes), GeneticRisk (0=Low, 1=Med, 2=High)
+def load_model():
+    """
+    Automatically finds and loads the trained model in the Colab environment.
+    """
+    # Use the filename you used during the training save step
+    model_filename = 'cancer_prediction_model.pkl' 
     
-    test_cases = {
-        "1. Young Healthy Athlete":      [25, 0, 22.5, 0, 0, 15, 0, 0],
-        "2. Smoker & Heavy Drinker":    [45, 0, 28.0, 1, 1, 1, 25, 1],
-        "3. High Genetic Risk/Healthy": [30, 1, 23.0, 0, 2, 12, 0, 1],
-        "4. High-Risk (All Factors)":   [60, 0, 35.0, 1, 2, 0, 30, 1],
-        "5. Obese (Non-smoker)":        [40, 1, 38.0, 0, 0, 2, 2, 0],
-        "6. Healthy Elderly (80+)":     [82, 0, 24.5, 0, 0, 10, 1, 0],
-        "7. Borderline (Medium Risk)":  [50, 1, 27.0, 0, 1, 5, 5, 0]
-    }
+    if os.path.exists(model_filename):
+        return joblib.load(model_filename)
+    else:
+        # If not found, search for any .pkl file in the current directory
+        pkl_files = [f for f in os.listdir('.') if f.endswith('.pkl')]
+        if pkl_files:
+            return joblib.load(pkl_files[0])
+        else:
+            raise FileNotFoundError("No trained model (.pkl) found in the current directory.")
 
-    # Convert to DataFrame for the model
-    feature_names = ['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 
-                     'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']
-    
-    df_test = pd.DataFrame.from_dict(test_cases, orient='index', columns=feature_names)
-
-    # 3. Run Predictions
-    predictions = model.predict(df_test)
-    probabilities = model.predict_proba(df_test)[:, 1] # Probability of Cancer (Class 1)
-
-    # 4. Display Results
-    print(f"{'Patient Profile':<30} | {'Diagnosis':<10} | {'Risk Probability'}")
-    print("-" * 65)
-    
-    for i, (profile, row) in enumerate(test_cases.items()):
-        status = "🔴 At Risk" if predictions[i] == 1 else "🟢 Healthy"
-        prob = probabilities[i] * 100
-        print(f"{profile:<30} | {status:<10} | {prob:>6.1f}%")
-
-    print("\n--- 🧠 Scientific Logic Verification ---")
-    print("Check Case 3 vs Case 2:")
-    print("- Case 3 has High Genetic Risk but stays 'Healthy' due to lifestyle [cite: 148-151].")
-    print("- Case 2 has lower genetics but high 'Smoking/Alcohol' causing high risk [cite: 153-154].")
-
+# Main Execution
 if __name__ == "__main__":
-    test_model_validity()
+    
+    # Load the model directly
+    try:
+        model = load_model()
+    except Exception as e:
+        print(f"Error: {e}")
+        # Stop execution if model is not found
+        exit()
+
+    # Define columns exactly as used during training
+    columns = ['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']
+
+    print("\n--- Virtual Clinic Test (7 Diverse Cases) ---")
+
+    # Define the 7 test cases
+    cases = [
+        {'Case': 'Healthy Athletic Young Male', 'Data': [25, 0, 22, 0, 0, 9, 0, 0]},
+        {'Case': 'Smoker with Alcohol Consumption', 'Data': [55, 1, 29, 1, 0, 2, 5, 0]},
+        {'Case': 'Healthy Lifestyle but High Genetic Risk', 'Data': [30, 0, 24, 0, 2, 5, 1, 1]},
+        {'Case': 'High Risk Patient (All Factors)', 'Data': [68, 1, 35, 1, 2, 0, 5, 1]},
+        {'Case': 'Severe Obesity Only (No Smoking)', 'Data': [45, 1, 40, 0, 0, 1, 0, 0]},
+        {'Case': 'Elderly (80y) but Health-Conscious', 'Data': [80, 0, 23, 0, 0, 6, 0, 0]},
+        {'Case': 'Borderline Case (Moderate Risks)', 'Data': [50, 1, 27, 0, 1, 3, 2, 0]}
+    ]
+
+    # Table Header
+    print(f"{'Case Scenario':<45} | {'Diagnosis':<15} | {'Risk Probability'}")
+    print("-" * 85)
+
+    for case in cases:
+        # Convert data to DataFrame
+        df_test = pd.DataFrame([case['Data']], columns=columns)
+
+        # Predict and get probability
+        prediction = model.predict(df_test)[0]
+        probability = model.predict_proba(df_test)[0][1]
+
+        # Formatting results
+        result_text = "🔴 High Risk" if prediction == 1 else "🟢 Healthy"
+        prob_text = f"{probability*100:.1f}%"
+
+        print(f"{case['Case']:<45} | {result_text:<15} | {prob_text}")
+
+    print("-" * 85)
+    print("Note: GeneticRisk (0=Low, 1=Medium, 2=High).")
