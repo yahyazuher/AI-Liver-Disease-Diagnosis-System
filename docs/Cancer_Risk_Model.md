@@ -24,6 +24,7 @@ The system's efficiency depends on a data split of **80% for training** and **20
 
 * **Training Data:** The model was trained on data from **1,200 patients** from the `The_Cancer_data_1500.csv` file.
 * **Testing Data:** Data from **300 patients** was reserved to test the accuracy and validity of the model on unseen data.
+The predictive accuracy is 94%.
 
 > **Technical Note:** This split is considered the "Golden Standard" for building a "Smart System." It prevents the model from "hallucinating" or suffering from Overfitting, which can occur if trained on 100% of the data, especially in datasets with limited size (for more information: `docs/XGBoost.md`).
 
