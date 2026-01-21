@@ -84,7 +84,9 @@ Execution: These tests were conducted using the code/test_cancer_model.py file. 
 
 Source Integrity: The source file is used exactly as provided by the original source. No modifications or changes have been made to the internal content of the file.
 
-Original Data: The original version of the file is preserved and available in the data/raw/ directory under the same name for reference and verification.
+Original Data & Code: 
+* The original training dataset is preserved and available at: data/raw/The_Cancer_data_1500_V2.csv.
+* The original model training code is available at: code/train_cancer_model.py.
 
 > The model is not merely a numerical classifier; it is a system capable of offering "preventive advice" by demonstrating how altering a single factor (such as quitting smoking) can drop the risk percentage from 99% to less than 20%.
 
