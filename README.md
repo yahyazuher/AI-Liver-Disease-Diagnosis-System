@@ -36,7 +36,7 @@ This repository implements a **multi-model architecture** powered by **XGBoost (
 
 ## Implemented Models
 | # | Model | Training Data | Original Training Data | Original Data Source | 80/20 Accuracy |
-|:---:|:---|:---|:---|:---:|:---:|:---:|
+|:---:|:---|:---|:---|:---:|:---:|
 | 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) | 99.98% |
 | 2 | Fibrosis&nbsp;Model | `data/processed/Hepatitis.csv` | `data/raw/Fibrosis.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
 | 3 | Donor&nbsp;Eligibility&nbsp;Model | `data/processed/Hepatitis_DonorTyper.csv` | `data/raw/Donor.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
