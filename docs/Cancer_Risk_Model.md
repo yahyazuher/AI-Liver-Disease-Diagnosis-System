@@ -78,11 +78,13 @@ Once smoking and alcohol entered the equation, the risk percentage immediately s
 
 ---
 
-### Technical Note for Developers (Testing Logic)
+# Technical Note for Developers (Testing Logic)
 
-These tests were conducted using the `test_cancer_model.py` file.
-These tests were conducted using the `test_cancer_model.py` file.
+Execution: These tests were conducted using the code/test_cancer_model.py file. Or for all Codes 
 
+Source Integrity: The source file is used exactly as provided by the original source. No modifications or changes have been made to the internal content of the file.
+
+Original Data: The original version of the file is preserved and available in the data/raw/ directory under the same name for reference and verification.
 
 > The model is not merely a numerical classifier; it is a system capable of offering "preventive advice" by demonstrating how altering a single factor (such as quitting smoking) can drop the risk percentage from 99% to less than 20%.
 
