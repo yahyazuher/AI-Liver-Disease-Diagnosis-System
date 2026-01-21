@@ -35,13 +35,13 @@ This repository implements a **multi-model architecture** powered by **XGBoost (
 ---
 
 ## Implemented Models
-| # | Model | Training Data | Original Training Data | Original Data Source | 80/20 Accuracy | Scientific Reliability |
+| # | Model | Training Data | Original Training Data | Original Data Source | 80/20 Accuracy |
 |:---:|:---|:---|:---|:---:|:---:|:---:|
-| 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) | 100% | 99% |
-| 2 | Fibrosis&nbsp;Model | `data/processed/Hepatitis.csv` | `data/raw/Fibrosis.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
-| 3 | Donor&nbsp;Eligibility&nbsp;Model | `data/processed/Hepatitis_DonorTyper.csv` | `data/raw/Donor.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
-| 4 | Hepatitis&nbsp;Model&nbsp;(C&nbsp;only) | `data/processed/Hepatitis.csv` | `data/raw/HepatitisC.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
-| 5 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
+| 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) | 99.98% |
+| 2 | Fibrosis&nbsp;Model | `data/processed/Hepatitis.csv` | `data/raw/Fibrosis.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
+| 3 | Donor&nbsp;Eligibility&nbsp;Model | `data/processed/Hepatitis_DonorTyper.csv` | `data/raw/Donor.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
+| 4 | Hepatitis&nbsp;Model&nbsp;(C&nbsp;only) | `data/processed/Hepatitis.csv` | `data/raw/HepatitisC.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
+| 5 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 0.94 |
 
  Detailed documentation for each model is available under `docs/`.
 ---
