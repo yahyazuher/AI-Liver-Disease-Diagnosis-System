@@ -46,10 +46,12 @@ This repository implements a **multi-model architecture** powered by **XGBoost (
  Detailed documentation for each model is available under `docs/`.
 ---
 
-# Fatty Liver Diagnosis Model (NAFLD)
+# 1. Fatty Liver Diagnosis Model (NAFLD)
 Non-Alcoholic Fatty Liver Disease Diagnosis Model
 
 This model analyzes the interplay between triglyceride levels and liver enzymes to identify inflammatory lipid accumulation. The system features a safety Veto protocol based on "Platelet counts" for the early detection of liver fibrosis markers associated with fatty liver.
+
+(Trained Model): fatty_liver_model.pkl
 
 Core Logic: Connects the "Raw Material" (Triglycerides) with the "Alarm Signal" (ALT/GGT) to distinguish NAFLD from viral hepatitis.
 
@@ -68,6 +70,8 @@ For detailed technical and medical information: regarding NHANES Data Integratio
 # 5. Liver Cancer Risk Assessment Model
 
 This model evaluates the probability of developing Hepatocellular Carcinoma (HCC) by analyzing the complex interplay between genetic predisposition and environmental triggers. It utilizes XGBoost weights to determine the impact of each analytical factor.
+
+(Trained Model): cancer_model.pkl
 
 Core Logic: The model demonstrates that a healthy lifestyle can effectively "neutralize" genetic predisposition; hereditary risk remains a "potential" rather than an "inevitable fate" without environmental catalysts (e.g., smoking and alcohol).
 
