@@ -60,8 +60,3 @@ For detailed technical and medical information: regarding NHANES Data Integratio
 
 ---
 
-
----
-
-##  Repository Structure
-
