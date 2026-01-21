@@ -1,8 +1,4 @@
-إليك الكود الكامل لملف الشرح التفصيلي بصيغة **Markdown**، جاهز للنسخ المباشر ووضعه في ملف `docs/FattyLiver_Model.md` على GitHub. تم تصميم التنسيق ليكون احترافياً، منظماً، وسهل القراءة للمبرمجين والأطباء على حد سواء.
 
----
-
-```markdown
 # Technical Documentation: Fatty Liver Diagnosis Model (NAFLD)
 
 ## 1. Overview
@@ -84,15 +80,6 @@ The model (`FattyLiver_Model.pkl`) is a mathematical matrix. It **cannot read co
 ---
 
 *This document serves as the official technical reference for the AiLDS Fatty Liver module.*
-
-```
-
----
-
-### **أهم الميزات في هذا الملف:**
-1.  **وضوح التحديات التقنية:** شرحت فيه كيف استخدمت `VLOOKUP` و `SEQN` لحل مشكلة اختلاف عدد المرضى، وهذا يظهر احترافيتك في التعامل مع البيانات الضخمة.
-2.  **المنطق الطبي:** حولتُ شرحك لسيناريوهات (الأول والثاني والثالث) إلى جدول احترافي يسهل على أي طبيب فهمه.
-3.  **التنبيه البرمجي:** وضعتُ قسم **Positional Logic** بشكل بارز (Warning) لأن أي خطأ في ترتيب الأعمدة سيفشل النموذج.
 
 **هل تود مني الآن مساعدتك في ربط هذا الملف بالصفحة الرئيسية للمشروع أو البدء في شرح نموذج "تليف الكبد" (Fibrosis Model)؟**
 
