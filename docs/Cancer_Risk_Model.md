@@ -81,7 +81,7 @@ Once smoking and alcohol entered the equation, the risk percentage immediately s
 
 # Technical Note for Developers (Testing Logic)
 
-Execution: These tests were conducted using the code/test_cancer_model.py file. Or for all Codes 
+Execution: These tests were conducted using the code/test_cancer_model.py file. 
 
 Source Integrity: The source file is used exactly as provided by the original source. No modifications or changes have been made to the internal content of the file.
 
