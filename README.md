@@ -35,19 +35,34 @@ The system is intentionally designed to work **without physical measurements**
 
 ---
 
-##  Implemented Models
-
-| Model | Purpose | Training Data |
-|------|--------|---------------|
-| Fatty Liver Model | Detects active NAFLD using biochemical markers | `data/processed/FattyLiver.csv` |
-|  | Detects liver scarring stages (1–4) | `data/processed/` |
-|  | Evaluates blood donation safety | `data/processed/` |
-|  | Viral hepatitis risk analysis (only C type) | `data/processed/` |
-| Cancer Model | Lifestyle + genetic risk assessment | `data/processed/The_Cancer_data_1500.csv` |
-| Supervisory Logic | Cross-model safety enforcement | _Rule-based (no training data)_ |
+## Implemented Models
+| # | Model | Training Data | Original Training Data | Original Data Source | 80/20 Accuracy* | Reliability** |
+|:---:|:---|:---|:---|:---:|:---:|:---:|
+| 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/FattyLiver.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
+| 2 | Fibrosis&nbsp;Model | `data/processed/Fibrosis.csv` | `data/raw/Fibrosis.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
+| 3 | Donor&nbsp;Eligibility&nbsp;Model | `data/processed/Donor.csv` | `data/raw/Donor.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
+| 4 | Hepatitis&nbsp;Model&nbsp;(C&nbsp;only) | `data/processed/HepatitisC.csv` | `data/raw/HepatitisC.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
+| 5 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% | 99% |
 
  Detailed documentation for each model is available under `docs/`.
 
+Detailed Model Purposes & Clinical Utility
+Technical and clinical objectives for each of the six integrated modules:
+
+Fatty Liver Model: This model specializes in detecting Non-Alcoholic Fatty Liver Disease (NAFLD) by analyzing biochemical markers in the blood. Its primary purpose is to identify lipid accumulation in the liver at an early stage to prevent progression into chronic inflammation.
+
+Fibrosis Model: Designed to classify liver fibrosis stages (F1 to F4). It analyzes the extent of liver tissue scarring, assisting clinicians in determining the severity of tissue damage and the urgency of therapeutic intervention.
+
+
+Shutterstock
+استكشاف
+Donor Eligibility Model: Acts as a biosafety gatekeeper for blood donation screening. The model evaluates a donor's general health parameters to ensure that donation is safe for the donor and that the blood is free from indicators that might harm the recipient.
+
+Hepatitis Model (Category C): Focuses on assessing the risk of Hepatitis C Virus (HCV) infection. By studying viral patterns and immune responses within the data, the model provides a rapid and highly accurate preliminary diagnosis.
+
+Cancer Model (Risk Assessment): A comprehensive assessment tool that bridges the gap between Lifestyle factors and Genetic predisposition. It predicts the probability of Hepatocellular Carcinoma (HCC), demonstrating how behavioral changes can mitigate hereditary risks.
+
+Supervisory Logic: The system's "central intelligence" unit. It reconciles outputs from the five previous models to ensure there are no conflicting results. Its core function is to enforce final safety protocols before issuing a clinical report to the user.
 ---
 
 ##  Ethics & Patient Safety (Core Design)
