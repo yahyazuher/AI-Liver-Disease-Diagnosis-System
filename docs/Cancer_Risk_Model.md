@@ -1,8 +1,8 @@
-# Liver Cancer Risk Assessment Model
+# The Gate Model: First Line of Defense
 
-This section is dedicated to evaluating the probability of developing Hepatocellular Carcinoma (HCC) by analyzing the complex interplay between genetic predisposition and environmental triggers. The system relies on an **XGBoost** training model, with its core file built as `cancer_model.pkl`. The model analyzes input values based on "weights" acquired during the training phase, allowing for a precise determination of the risk level associated with each analytical factor.
+This section is dedicated to the initial triage of users, functioning as the system's "First Line of Defense." It employs a binary classification approach to distinguish between healthy individuals and potential liver patients. The system relies on an **XGBoost** training model, with its core file built as `models/gate_model.pkl`. The model analyzes biochemical input values based on "weights" acquired during the training phase on a rigorously cleaned dataset, ensuring resource efficiency by filtering out healthy users before activating complex sub-models.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](INSERT_YOUR_COLAB_LINK_HERE)
 
 ---
 
@@ -10,40 +10,37 @@ This section is dedicated to evaluating the probability of developing Hepatocell
 
 | Name | Database Location | Function |
 | --- | --- | --- |
-| **cancer_model.pkl** | `models/` | The trained model containing the final decision-making weights. |
-| **train_cancer_model.py** | `code/` | Source code responsible for building and training the model. |
-| **test_cancer_model.py** | `code/` | Source code dedicated to testing the efficiency of the trained model. |
-| **The_Cancer_data_1500.csv** | `data/processed` | Training dataset containing 1,500 patient records with required analytics. |
+| **gate_model.pkl** | `models/` | The trained model containing the final decision-making weights(Sick, Healthy). |
+| **train_model.py** | `code/` | Source code responsible for cleaning data and training the model. |
+| **predict_patients.py** | `code/` | Source code dedicated to testing the efficiency of the trained model. |
+| **Liver_Patient_Dataset_Cleaned_19k.csv** | `data/processed` | The cleaned training dataset containing ~19,000 unique records. |
 | **XGBoost.md** | `docs/` | Technical documentation explaining the mechanism of the XGBoost algorithm. |
 
 ---
 
 ### Training Phase
 
-The system's efficiency depends on a data split of **80% for training** and **20% for testing**, which resulted in a final predictive accuracy of 94%.
+The system's efficiency depends on a data split of **80% for training** and **20% for testing**, which resulted in a realistic real-world accuracy of ~74%.
 
+* **Training Data:** The model was trained on data from approximately **15,500 patients** extracted from the `Liver_Patient_Dataset_Cleaned_19k.csv` file.
+* **Testing Data:** Data from approximately **3,800 patients** was reserved to test the accuracy and validity of the model on unseen data.
 
-* **Training Data:** The model was trained on data from **1,200 patients** from the `The_Cancer_data_1500.csv` file.
-* **Testing Data:** Data from **300 patients** was reserved to test the accuracy and validity of the model on unseen data.
-
-
-> **Technical Note:** This split is considered the "Golden Standard" for building a "Smart System." It prevents the model from "hallucinating" or suffering from Overfitting, which can occur if trained on 100% of the data, especially in datasets with limited size (for more information: `docs/XGBoost.md`).
+> **Technical Note:** This split adheres to the "Golden Standard" for building a robust "Smart System." Crucially, this model was trained on a **de-duplicated dataset** (reduced from 30k to 19k rows) to prevent "Data Leakage" and ensuring the model learns actual patterns rather than memorizing repeated entries (for more information: `docs/XGBoost.md`).
 
 ---
 
 ### 1- Data Source and Integrity
 
-* **Original Database:** Obtained from the "Cancer Prediction Dataset" on **Kaggle** (by researcher *Rabie El Kharoua*).
-* **Data Link:** [Source on Kaggle](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset?resource=download)
-* **Data Integrity:** No manual modifications or additional cleaning were performed. The file was used in its original state as it is technically optimized directly from the source for handling Machine Learning algorithms.
+* **Original Database:** Based on the renowned **Indian Liver Patient Dataset (ILPD)**.
+* **Data Processing:** Unlike standard datasets, **rigorous preprocessing** was performed. Over 11,000 duplicate rows were identified and removed.
+* **Why Cleaning?** This step was essential to eliminate bias and prevent the "Overfitting" often seen in public versions of this dataset, ensuring the model's reliability in real-world scenarios.
 
 ---
 
 ### 2- Model Input Requirements
 
 To ensure result accuracy, data must be entered in the strict mathematical order used during model training:
-`['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']`
-
+`['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'Alkaline_Phosphotase', 'Alamine_Aminotransferase', 'Aspartate_Aminotransferase', 'Total_Protiens', 'Albumin', 'Albumin_and_Globulin_Ratio']`
 ---
 
 ### 3- Model Optimization & Refinement
