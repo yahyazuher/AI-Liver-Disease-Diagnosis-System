@@ -1,31 +1,94 @@
+# Liver Cancer Risk Assessment Model
+
+
+
+This section is dedicated to evaluating the probability of developing Hepatocellular Carcinoma (HCC) by analyzing the complex interplay between genetic predisposition and environmental triggers. The system relies on an **XGBoost** training model, with its core file built as `cancer_model.pkl`. The model analyzes input values based on "weights" acquired during the training phase, allowing for a precise determination of the risk level associated with each analytical factor.
+
+
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
+
+
+
+---
+
+
+
+### Dataset Overview
+
+
+
+| Name | Database Location | Function |
+
+| --- | --- | --- |
+
+| **cancer_model.pkl** | `models/` | The trained model containing the final decision-making weights. |
+
+| **train_cancer_model.py** | `code/` | Source code responsible for building and training the model. |
+
+| **test_cancer_model.py** | `code/` | Source code dedicated to testing the efficiency of the trained model. |
+
+| **The_Cancer_data_1500.csv** | `data/processed` | Training dataset containing 1,500 patient records with required analytics. |
+
+| **XGBoost.md** | `docs/` | Technical documentation explaining the mechanism of the XGBoost algorithm. |
+
+
+
+---
+
+
+
+### Training Phase
+
+
+
+The system's efficiency depends on a data split of **80% for training** and **20% for testing**, which resulted in a final predictive accuracy of 94%.
 
 
 
 
 
+* **Training Data:** The model was trained on data from **1,200 patients** from the `The_Cancer_data_1500.csv` file.
+
+* **Testing Data:** Data from **300 patients** was reserved to test the accuracy and validity of the model on unseen data.
 
 
 
 
 
+> **Technical Note:** This split is considered the "Golden Standard" for building a "Smart System." It prevents the model from "hallucinating" or suffering from Overfitting, which can occur if trained on 100% of the data, especially in datasets with limited size (for more information: `docs/XGBoost.md`).
 
 
 
+---
 
 
 
+### 1- Data Source and Integrity
 
 
 
+* **Original Database:** Obtained from the "Cancer Prediction Dataset" on **Kaggle** (by researcher *Rabie El Kharoua*).
+
+* **Data Link:** [Source on Kaggle](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset?resource=download)
+
+* **Data Integrity:** No manual modifications or additional cleaning were performed. The file was used in its original state as it is technically optimized directly from the source for handling Machine Learning algorithms.
 
 
 
+---
 
 
 
+### 2- Model Input Requirements
 
 
 
+To ensure result accuracy, data must be entered in the strict mathematical order used during model training:
+
+`['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']`
+
+---
 ### 3- Model Optimization & Refinement
 
 The model underwent a critical optimization phase where the `max_depth` parameter was adjusted from **5** to **3**. This strategic reduction in complexity, combined with optimized learning rates, led to a measurable improvement in diagnostic performance:
