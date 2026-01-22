@@ -8,19 +8,6 @@ An integrated AI ecosystem designed to assess liver health through a pipeline of
 > It does **not** replace professional medical diagnosis.
 
 ---
-
-## Project Overview
-
-This repository implements a **multi-model architecture** powered by **XGBoost (Extreme Gradient Boosting)** algorithms to ensure high-performance classification and risk assessment.
-
-**Key System Features:**
-- **Specialized Modeling:** Each model focuses on a **specific liver-related condition** rather than a generic output.
-- **Interconnected Logic:** Models **do not act independently**; outputs act as flags for subsequent logic layers.
-- **Safety-First Veto System:** A built-in logic layer prevents unsafe decisions (e.g., flagging a high-risk patient as a donor).
-- **Clinical Grounding:** All predictions are strictly grounded in **clinical guidelines**.
-- **Non-Invasive Focus:** The core diagnostic models are designed to minimize reliance on physical measurements, focusing primarily on **routine blood analysis** biomarkers.
----
-
 ##  Repository Structure
 
 | Directory | Description |
@@ -28,22 +15,52 @@ This repository implements a **multi-model architecture** powered by **XGBoost (
 | `models/` | Serialized models organized by disease type (Fatty Liver, Fibrosis, Donor, Cancer). |
 | `docs/` | Detailed documentation on methodology, medical logic, and ethical standards. |
 | `data/` | Contains dataset placeholders. **Note:** Raw medical data is not included for privacy/ethical reasons. |
-| `code/` | Training and testing scripts (`.ipynb`). **Fully optimized and ready for immediate execution on Google Colab.** |
+| `code/` | Training and testing scripts (`.py`). **Fully optimized and ready for immediate execution on Google Colab.** |
+
+---
+### Project Overview
+
+This project presents a **multi-model AI system** designed to assess liver health. The system works as follows:
+
+* It first analyzes lab results to determine whether the user needs further assessment by subsequent models. Healthy users are excluded to save resources and avoid unnecessary processing.
+* Diagnoses **liver fibrosis (Fibrosis)** and **cirrhosis (Cirrhosis)** at different stages.
+* Detects **Non-Alcoholic Fatty Liver Disease (NAFLD)**.
+* Predicts the **risk of liver cancer (Hepatocellular Carcinoma)**.
+
+**System Features:**
+
+* Specialized models for each liver-related condition.
+* Sequential logic between models with a safety protocol to prevent incorrect decisions.
+* Relies on routine blood markers to minimize invasive testing.
+* All predictions are based on **clinical guidelines**.
 
 ---
 
 ## Implemented Models
 | # | Model | Training Data | Original Training Data | Original Data Source |
 |:-:|:---|:---|:---|:---:|
+| 1 | Gate&nbsp;Model | `data/processed/Liver_Patient_Dataset_Cleaned_19k.csv` | `data/raw/Liver Patient Dataset (LPD)_train.csv` | [Dataset](https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset) |
 | 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) |
-| 2 |     Hepatitis&nbsp;Models&nbsp;(C&nbsp;only) <br> 3 Specialized Models | `data/processed/Hepatitis.csv` | `data/raw/cirrhosis.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
-| 3 | Gate&nbsp;Model | `data/processed/Liver_Patient_Dataset_Cleaned_19k.csv` | `data/raw/Liver Patient Dataset (LPD)_train.csv` | [Dataset](https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset) |
+| 3 |     Hepatitis&nbsp;Models&nbsp;(C&nbsp;only) <br> 3 Specialized Models | `data/processed/Hepatitis.csv` | `data/raw/cirrhosis.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
 | 4 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) |
 
+---
+## 1. The Gate Model: First Line 
+
+The Gate Model serves as the **first line of defense** in the system, performing binary classification to separate healthy users from potential liver patients. It relies on an **XGBoost-trained model** (`gate_model.pkl`) that interprets biochemical input values using learned weights from a rigorously cleaned dataset, ensuring resource-efficient pre-screening before activating complex sub-models.
+
+**(Trained Model):** `gate_model.pkl`
+
+**Core Logic:** Evaluates user biochemical profiles and identifies potential risk patterns to filter cases needing further analysis.
+
+**Critical Requirement (Positional Logic):** Inputs must follow the exact order used in training:
+`['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'ALP', 'ALT', 'AST', 'Total_Protiens', 'Albumin', 'Albumin_and_Globulin_Ratio']`
+
+For more information on dataset preparation, model training, and testing methodology, please visit: ➔ `docs/Gate_Model.md`
 
 ---
 
-## 1. Fatty Liver Diagnosis Model (NAFLD)
+## 2. Fatty Liver Diagnosis Model (NAFLD)
 Non-Alcoholic Fatty Liver Disease Diagnosis Model
 
 This model analyzes the interplay between triglyceride levels and liver enzymes to identify inflammatory lipid accumulation. The system features a safety Veto protocol based on "Platelet counts" for the early detection of liver fibrosis markers associated with fatty liver.
@@ -57,7 +74,7 @@ Critical Requirement (Positional Logic): The model processes data as an ordered 
 For detailed technical and medical information: regarding NHANES Data Integration, cleaning strategies, and clinical scenario analysis, please visit: ➔ `docs/FattyLiver_Model.md`
 
 ---
-## 2. Hepatitis C (HCV) Diagnostic & Prognostic Framework
+## 3. Hepatitis C (HCV) Diagnostic & Prognostic Framework
 
 This ensemble framework assesses liver fibrosis progression and calculates survival risk for **Hepatitis C (HCV)** patients. It integrates structural liver damage with functional outcomes using weighted **XGBoost** architectures to provide a multi-dimensional health assessment.
 
@@ -67,9 +84,7 @@ This ensemble framework assesses liver fibrosis progression and calculates survi
 
 **Critical Requirement (Positional Logic):** The system processes clinical markers as a strict mathematical matrix. Inputs must be entered in the exact 15-feature order: `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema']`.
 
-**For detailed technical and medical information:** regarding the **"Structural-Functional Dissociation"** paradox, the 47% stage accuracy disclaimer, and virtual clinic validation, please visit: ➔ `docs/Hepatitis_Model.md`
-
----
+**For detailed technical and medical information:** regarding the **"Structural-Functional Dissociation"** paradox, the 47% stage accuracy disclaimer, and virtual clinic validation, please visit: ➔ `docs/HepatitisC_Model.md`
 
 ---
 
