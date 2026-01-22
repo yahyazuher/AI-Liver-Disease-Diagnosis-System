@@ -1,6 +1,5 @@
-# AiLDS: AI Liver Disease Diagnosis System
-
-This repository hosts a multi-stage diagnostic framework dedicated to evaluating the progression of **Liver Fibrosis** and predicting the probability of critical complications (Ascites) and mortality. The system relies on an ensemble of **XGBoost** training models, with its core logic distributed across three specialized files: `hepatitis_stage.pkl`, `hepatitis_complications.pkl`, and `hepatitis_status.pkl`. The model analyzes clinical input values based on "weights" acquired during the training phase, allowing for a precise determination of the risk level associated with each biomarker.
+# Hepatitis Diagnostic & Prognostic Framework
+This specialized framework is dedicated to evaluating the progression of Liver Fibrosis and predicting the probability of critical complications, such as Ascites, and overall mortality. The system utilizes an ensemble of XGBoost models, with its core logic distributed across three specialized serialized files: hepatitis_stage.pkl, hepatitis_complications.pkl, and hepatitis_status.pkl. By analyzing clinical input values through optimized "feature weights," the framework provides a precise determination of the risk levels associated with key biomarkers.
 
 ---
 
@@ -18,11 +17,28 @@ This repository hosts a multi-stage diagnostic framework dedicated to evaluating
 
 ---
 
-### Training Phase
+### Training Phase 
 
-The system's efficiency depends on a data split of **80% for training** and **20% for testing**, ensuring the model learns robust patterns without memorizing the data.
+The reliability of the **Hepatitis Diagnostic Framework** is built on a rigorous training pipeline designed to ensure scientific validity and clinical transparency:
 
-> **Technical Note:** This split is considered the "Golden Standard" for medical datasets. It prevents the model from "hallucinating" or suffering from Overfitting, ensuring that high-risk stages (Stage 4) are identified based on generalized pathological patterns rather than specific patient identifiers.
+* **The  Rule (Generalization):** The processed dataset was split into ** ( records)** for training and ** ( records)** for independent validation. This separation ensures the models do not simply "memorize" the data but learn the underlying clinical patterns necessary to handle new, unseen cases.
+* **Stratified Sampling ():** We utilized **Stratified Splitting** to ensure that the distribution of critical outcomes—specifically **Stage 4 (Cirrhosis)** and **Mortality**—remains identical in both the training and testing sets. This prevents a random split from leaving the test set without enough high-risk cases for a fair evaluation.
+
+#### **Model Performance Results**
+
+After completing the training on  records and testing on  unseen records, the models achieved the following confidence levels:
+
+| Model | Accuracy | Status |
+| --- | --- | --- |
+| **`hepatitis_complications.pkl`** | $92.86\%$ %|  High Reliability |
+| **`hepatiti_status.pkl`** | $79.76\%$ % | Moderate-High Reliability |
+| **`hepatitis_stage.pkl`** | $< 49\%$ % | Academic Use Only |
+
+#### **Stability & Clinical Disclaimer**
+
+By training on a "true representation" of the disease, the framework achieves stable diagnostic confidence for mortality and complications. However, it is imperative to note that while the **Virtual Case Analysis Table** shows logical results, the **`hepatitis_stage.pkl`** model is considered **inaccurate for clinical purposes** due to its low validation score.
+
+> **`hepatitis_stage.pkl`** Included in this repository solely for academic demonstration and as a structural component for the multi-stage AI architecture.
 
 ---
 ## Data Pipeline & Feature Engineering
@@ -33,7 +49,6 @@ The primary dataset is sourced from the **Cirrhosis Prediction Dataset** hosted 
 
 * **Original Source:** [Kaggle: Cirrhosis Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset)
 * **Raw File Path:** `data/raw/cirrhosis.csv`
-* **Description:** Contains historical clinical data collected between 1974 and 1984.
 
 ### 2. Feature Engineering Logic
 
@@ -46,17 +61,8 @@ The following transformations were applied:
 The goal was to predict specific mortality risk. The original multi-class status was mapped to a binary format:
 
  **Original Values:**
-* `C` (Censored) & `CL` (Censored due to Liver Transplant)  Considered **Stable**.
-* `D` (Death)  Considered **Critical Event**.
-
-
-* **Engineering Logic:**
-```python
-Status = { 'C': 0, 'CL': 0, 'D': 1 }  # 0: Alive/Stable, 1: Deceased
-
-```
-
-
+* `(C:0: Alive/Stable)` (Censored) & `CL` (Censored due to Liver Transplant)  Considered Stable.
+* `(D:1: Deceased)` (Death)  Considered Critical Event.
 
 #### **B. Clinical Feature Encoding**
 
@@ -77,10 +83,6 @@ Unlike binary features, Edema has graduated severity levels. We applied **Ordina
 * **`N` (No Edema):** Mapped to **0.0**
 * **`S` (Slight Edema):** Mapped to **0.5** (Edema resolvable with diuretics)
 * **`Y` (Severe Edema):** Mapped to **1.0** (Edema resistant to diuretics)
----
-_____________________________________
-إليك تنسيق احترافي ومنظم للقسمين بحيث يكمل كل منهما الآخر دون تكرار للمعلومات، مما يجعل "المنطق البرمجي" (Logic) الخاص بمشروعك واضحاً جداً لأي شخص يقرأه على GitHub:
-
 ---
 
 # AiLDS: AI Liver Disease Diagnosis System
