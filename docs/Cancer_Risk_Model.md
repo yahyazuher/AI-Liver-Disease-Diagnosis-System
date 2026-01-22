@@ -20,8 +20,8 @@ This section is dedicated to evaluating the probability of developing Hepatocell
 | Name | Database Location | Function |
 | --- | --- | --- |
 | **cancer_model.pkl** | `models/` | The trained model containing the final decision-making weights. |
-| **train_cancer_model.py** | `code/` | Source code responsible for building and training the model. |
-| **test_cancer_model.py** | `code/` | Source code dedicated to testing the efficiency of the trained model. |
+| **train_cancer_model.py** | `code/` | Source code responsible for building and training the model.Can be run directly in Google Colab |
+| **test_cancer_model.py** | `code/` | Source code dedicated to testing the efficiency of the trained model.Can be run directly in Google Colab |
 | **The_Cancer_data_1500.csv** | `data/processed` | Training dataset containing 1,500 patient records with required analytics. |
 | **XGBoost.md** | `docs/` | Technical documentation explaining the mechanism of the XGBoost algorithm. |
 
@@ -141,6 +141,8 @@ To demonstrate the practical application of the model, a **"Virtual Clinic"** si
 | **6. The Healthy Elderly** | 80y, athletic, non-smoker. | **🟢 Healthy** | **0.94%** | Age is not a standalone trigger without toxins. |
 | **7. The Borderline Case** | Moderate risks across most factors. | **🟢 Healthy** | **5.42%** | Demonstrates model stability in moderate scenarios. |
 
+*The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
+
 ---
 
 ### Clinical Insights
@@ -158,6 +160,8 @@ When a patient with high genetic predisposition (`GeneticRisk = 2`) and family h
 #### **C. The Lethal Weight of Toxins (Case 2 & 4)**
 
 The data confirms that environmental triggers are the primary drivers of risk. Once heavy smoking and alcohol consumption are introduced, the risk probability immediately spikes above **99%**. This reflects the **high feature importance** assigned by the **XGBoost** algorithm to toxins over all other variables(more info: docs/XGBoost).
+
+*The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
 
 ---
 # 5- Technical Note for Developers 
