@@ -25,17 +25,74 @@ The system's efficiency depends on a data split of **80% for training** and **20
 > **Technical Note:** This split is considered the "Golden Standard" for medical datasets. It prevents the model from "hallucinating" or suffering from Overfitting, ensuring that high-risk stages (Stage 4) are identified based on generalized pathological patterns rather than specific patient identifiers.
 
 ---
+## Data Pipeline & Feature Engineering
 
-### 1- Data Source and Integrity
+### 1. Data Source (Raw Data)
 
-* **Original Database:** Derived from the **Mayo Clinic Primary Biliary Cirrhosis** dataset (originally `cirrhosis.csv`).
-* **Data Logic (CL & D):** The dataset handles censored data specifically:
-* **CL (Censored Liver Tx):** Treated as "Alive/Stable" (Class 0) to focus the model on natural mortality risk.
-* **D (Death):** Treated as "Critical Event" (Class 1).
+The primary dataset is sourced from the **Cirrhosis Prediction Dataset** hosted on Kaggle (provided by *fedesoriano*), which originates from the renowned **Mayo Clinic** study on primary biliary cirrhosis (PBC).
+
+* **Original Source:** [Kaggle: Cirrhosis Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset)
+* **Raw File Path:** `data/raw/cirrhosis.csv`
+* **Description:** Contains historical clinical data collected between 1974 and 1984.
+
+### 2. Feature Engineering Logic
+
+To prepare the raw data for the **XGBoost** model, a rigorous **Data Engineering** phase was executed. The original file (`cirrhosis.csv`) was transformed into the processed training file (`Hepatitis.csv`) located in `data/processed`, resulting in a refined dataset of **419 patient records**.
+
+The following transformations were applied:
+
+#### **A. Target Variable Transformation (Status)**
+
+The goal was to predict specific mortality risk. The original multi-class status was mapped to a binary format:
+
+* **Original Values:**
+* `C` (Censored) & `CL` (Censored due to Liver Transplant)  Considered **Stable**.
+* `D` (Death)  Considered **Critical Event**.
 
 
-* **Preprocessing:** Categorical variables (Sex, Ascites, Spiders) were encoded into strict numerical formats (0/1), and Age was converted from days to years.
+* **Engineering Logic:**
+```python
+Status = { 'C': 0, 'CL': 0, 'D': 1 }  # 0: Alive/Stable, 1: Deceased
 
+```
+
+
+
+#### **B. Clinical Feature Encoding**
+
+Categorical text values were converted into numerical formats to ensure mathematical compatibility with the model:
+
+| Feature | Transformation Logic | Rationale |
+| --- | --- | --- |
+| **Age** | `Days / 365.25` | Converted from raw days to **Years** for clinical interpretability. |
+| **Sex** | `M`  `1`, `F`  `0` | Binary encoding. |
+| **Ascites** | `Y`  `1`, `N`  `0` | Presence vs. Absence. |
+| **Hepatomegaly** | `Y`  `1`, `N`  `0` | Liver enlargement indicator. |
+| **Spiders** | `Y`  `1`, `N`  `0` | Spider angiomas indicator. |
+
+#### **C. Ordinal Severity Scaling (Edema)**
+
+Unlike binary features, Edema has graduated severity levels. We applied **Ordinal Encoding** to reflect the increasing risk:
+
+* **`N` (No Edema):** Mapped to **0.0**
+* **`S` (Slight Edema):** Mapped to **0.5** (Edema resolvable with diuretics)
+* **`Y` (Severe Edema):** Mapped to **1.0** (Edema resistant to diuretics)
+
+---
+
+### **Summary of Data Flow**
+
+```mermaid
+graph LR
+    A[Raw Data: data/raw/cirrhosis.csv] --> B(Feature Engineering & Cleaning)
+    B --> C{Mapping Logic}
+    C --> D[Age Conversion]
+    C --> E[Status Re-classification]
+    C --> F[Categorical Encoding]
+    F --> G[Processed Data: data/processed/Hepatitis.csv]
+    G --> H[XGBoost Training Pipeline]
+
+```
 ---
 
 ### 2- Model Input Requirements
