@@ -25,25 +25,21 @@ This repository implements a **multi-model architecture** powered by **XGBoost (
 
 | Directory | Description |
 |-----------|-------------|
-| `data/` | Contains dataset placeholders. **Note:** Raw medical data is not included for privacy/ethical reasons. |
 | `models/` | Serialized models organized by disease type (Fatty Liver, Fibrosis, Donor, Cancer). |
-| `training/` | Training scripts (`.ipynb`). **Fully optimized and ready for immediate execution on Google Colab.** |
 | `docs/` | Detailed documentation on methodology, medical logic, and ethical standards. |
-
-
+| `data/` | Contains dataset placeholders. **Note:** Raw medical data is not included for privacy/ethical reasons. |
+| `code/` | Training and testing scripts (`.ipynb`). **Fully optimized and ready for immediate execution on Google Colab.** |
 
 ---
 
 ## Implemented Models
-| # | Model | Training Data | Original Training Data | Original Data Source | 80/20 Accuracy |
-|:---:|:---|:---|:---|:---:|:---:|
-| 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) | 99.98% |
-| 2 | Fibrosis&nbsp;Model | `data/processed/Hepatitis.csv` | `data/raw/Fibrosis.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
-| 3 | Donor&nbsp;Eligibility&nbsp;Model | `data/processed/Hepatitis_DonorTyper.csv` | `data/raw/Donor.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
-| 4 | Hepatitis&nbsp;Model&nbsp;(C&nbsp;only) | `data/processed/Hepatitis.csv` | `data/raw/HepatitisC.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 100% |
-| 5 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) | 94% |
+| # | Model | Training Data | Original Training Data | Original Data Source |
+|:-:|:---|:---|:---|:---:|
+| 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) |
+| 2 |     Hepatitis&nbsp;Models&nbsp;(C&nbsp;only) <br> 3 Specialized Models | `data/processed/Hepatitis.csv` | `data/raw/cirrhosis.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
+| 3 | Donor&nbsp;Eligibility&nbsp;Model | `data/processed/Hepatitis_DonorTyper.csv` | `data/raw/Donor.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) |
+| 4 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) |
 
-Detailed documentation for each model is available under `docs/`.
 
 ---
 
@@ -77,7 +73,7 @@ This ensemble framework assesses liver fibrosis progression and calculates survi
 
 ---
 
-## 5. Liver Cancer Risk Assessment Model
+## 4. Liver Cancer Risk Assessment Model
 
 This model evaluates the probability of developing Hepatocellular Carcinoma (HCC) by analyzing the complex interplay between genetic predisposition and environmental triggers. It utilizes XGBoost weights to determine the impact of each analytical factor.
 
