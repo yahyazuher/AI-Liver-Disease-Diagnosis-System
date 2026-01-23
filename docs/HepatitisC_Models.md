@@ -40,7 +40,7 @@ After completing the training on  records and testing on  unseen records, the mo
 | **`hepatiti_status.pkl`** | $71.43\%$ % | Moderate-High Reliability |
 | **`hepatitis_stage.pkl`** | $< 62.50\%$ % | Academic Use Only |
 
-The logic used to generate these results, including the $80/20$ split and XGBoost configurations, can be found in the source script: `code/train_HC_models` or executed directly via the Colab environment: [![Open In Colab](https://img.shields.io/badge/Open%20Fibrosis%20Model%20in%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=3oQ6HJTl0F1V)
+The logic used to generate these results, including the $80/20$ split and XGBoost configurations, can be found in the source script: `code/train_HC_models` or executed directly via the Colab environment: [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=3oQ6HJTl0F1V)
 
 
 ---
