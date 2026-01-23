@@ -91,7 +91,7 @@ The model underwent a critical optimization phase where the `max_depth` paramete
 * **Precision Improvement:** The precision for detecting high-risk cases (Class 1) rose from **93%** to **95%**, significantly reducing false positives.
 * **Recall Optimization:** The model's ability to correctly identify actual cancer risks (Recall) improved from **87%** to **90%**.
 
-[NOTE] Technical Implementation: The Automated Hyperparameter Tuning Strategy used to derive these optimal values is implemented in the Google Colab notebook under the cell titled "Cancer Risk Model". For better clarity, a comprehensive explanation of the tuning logic is provided directly above the cell, followed by a step-by-step documentation of the code's functionality. [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
+[NOTE] The Automated Hyperparameter Tuning Strategy used to derive these optimal values is implemented in the Google Colab notebook under the cell titled "Cancer Risk Model". For better clarity, a comprehensive explanation of the tuning logic is provided directly above the cell, followed by a step-by-step documentation of the code's functionality. [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 
 ---
 
