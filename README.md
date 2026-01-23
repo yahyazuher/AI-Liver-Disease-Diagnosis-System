@@ -41,7 +41,7 @@ This project presents a **multi-model AI system** designed to assess liver healt
 |:-:|:---|:---|:---|:---:|
 | 1 | Gate&nbsp;Model | `data/processed/Liver_Patient_Dataset_Cleaned_19k.csv` | `data/raw/Liver Patient Dataset (LPD)_train.csv` | [Dataset](https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset) |
 | 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) |
-| 3 |     HepatitisC&nbsp;Models <br> 3 Specialized Models | `data/processed/HepatitisC.csv` `data/processed/HepatitisC_Stage.csv` `data/processed/HepatitisC_status.csv` | `data/raw/cirrhosis.csv` `data/processed/master8323pationt.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
+| 3 |     HepatitisC&nbsp;Models <br> 3 Specialized Models | `data/processed/HepatitisC_Stage.csv` `data/processed/HepatitisC_status.csv` `data/processed/HepatitisC_complications.csv` | `data/raw/cirrhosis.csv` `data/processed/master8323pationt.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
 | 4 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) |
 
 ---
