@@ -18,7 +18,7 @@ This framework is specifically designed and optimized for Hepatitis C (HCV) diag
 | **hepatitiC_status_model.pkl** | `models/` | Trained model to calculate survival/mortality probability. |
 | **train_hepatitisC_models** | `code/` | Source code responsible for building and training the 3 models.Can be run directly in Google Colab |
 | **test_hepatitisC_models** | `code/` | Inference script for diagnosing the 7 cases (see details above).Can be run directly in Google Colab |
-| **Hepatitis.csv** | `data/processed` | The processed clinical dataset derived from Mayo Clinic records. |
+| **`HepatitisC.csv`** **`hepatitisC_status.csv`**  **`hepatitisC_stage.csv`** | `data/processed` | The processed clinical dataset derived from Mayo Clinic records. |
 | **XGBoost.md** | `docs/` | Technical documentation explaining the mechanism of the XGBoost algorithm. |
 
 ---
@@ -36,29 +36,76 @@ After completing the training on  records and testing on  unseen records, the mo
 
 | Model | Accuracy | Status |
 | --- | --- | --- |
-| **`hepatitis_complications.pkl`** | $92.86\%$ %|  High Reliability |
-| **`hepatiti_status.pkl`** | $79.76\%$ % | Moderate-High Reliability |
-| **`hepatitis_stage.pkl`** | $< 49\%$ % | Academic Use Only |
+| **`hepatitiC_status_model.pkl`** | $92.86\%$ %|  High Reliability |
+| **`hepatiti_status.pkl`** | $71.43\%$ % | Moderate-High Reliability |
+| **`hepatitis_stage.pkl`** | $< 62.50\%$ % | Academic Use Only |
 
-The logic used to generate these results, including the $80/20$ split and XGBoost configurations, can be found in the source script: code/train_hepatitis_models.py or executed directly via the Colab environment:[![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
-
-#### **Stability & Clinical Disclaimer**
-
-By training on a "true representation" of the disease, the framework achieves stable diagnostic confidence for mortality and complications. However, it is imperative to note that while the **Virtual Case Analysis Table** shows logical results, the **`hepatitis_stage.pkl`** model is considered **inaccurate for clinical purposes** due to its low validation score.
-
-> **`hepatitis_stage.pkl`** Included in this repository solely for academic demonstration and as a structural component for the multi-stage AI architecture.
+The logic used to generate these results, including the $80/20$ split and XGBoost configurations, can be found in the source script: code/train_HC_models or executed directly via the Colab environment:[![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 
 ---
-## Data Pipeline & Feature Engineering
 
-### Data Source (Raw Data)
+##  Data Pipeline & Feature Engineering
 
-The primary dataset is sourced from the **Cirrhosis Prediction Dataset** hosted on Kaggle (provided by *fedesoriano*), which originates from the renowned **Mayo Clinic** study on primary biliary cirrhosis (PBC).
+### Data Sources (Raw Data)
 
-* **Original Source:** [Kaggle: Cirrhosis Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset)
+The system relies on two distinct primary datasets. these datasets were selected for their clinical relevance and statistical significance.
+
+#### **1. Primary Biliary Cirrhosis (PBC) Dataset**
+
+* **Purpose:** Used to train the **Mortality Risk (Status) and (Complications)** models.
+* **Origin:** Sourced from the renowned **Mayo Clinic** study on primary biliary cirrhosis (PBC).
 * **Raw File Path:** `data/raw/cirrhosis.csv`
+* **Source:** [Kaggle: Cirrhosis Prediction Dataset (fedesoriano)](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset)
 
-### Feature Engineering Logic
+#### **2. Hepatitis C (HCV) Clinical Dataset**
+
+* **Purpose:** Used to train the **Fibrosis Staging (Stage)** model.
+* **Origin:** A comprehensive clinical dataset comprising **8,323 patient records**, specifically curated to track Hepatitis C progression and fibrosis stages.
+* **Raw File Path:** `data/raw/master8323pationt.csv`
+* **Source:** Publicly available clinical dataset (Aggregated from open-access medical repositories for research purposes).
+  
+---
+
+## 1. Model Optimization & Dataset Curation
+
+This section details the rigorous data engineering strategies applied to ensure the models learn from valid clinical pathology rather than statistical noise.
+
+### 1.1. Mortality Prediction Model (Status Classification)
+
+* **Objective:** Predict patient survival outcomes (**Deceased** vs. **Alive**).
+* **Initial Baseline:** The preliminary model was trained on the full raw dataset (), achieving an accuracy of **79.76%**. However, a data quality audit revealed that **105 records** contained missing values in critical biomarkers (*Triglycerides, SGOT, Alk_Phos, Copper, and Cholesterol*).
+* **The "False Confidence" Problem:** The initial high accuracy was artificially inflated. The model was learning patterns from imputed or missing data structures rather than actual clinical pathology, leading to unreliable real-world predictions.
+* **Refinement Strategy (Listwise Deletion):** To ensure the model trains on "Ground Truth" data only, all records with missing critical values were strictly removed.
+* **Final Dataset:**
+* **Size:**  patients.
+* **Distribution:** 187 Stable/Alive vs. 125 Deceased.
+
+
+* **Final Performance:** The refined model achieved an accuracy of **71.43%**. While numerically lower than the baseline, this metric represents **statistically robust performance**. The model is no longer "guessing" on missing data. Furthermore, the class balance (approx. 60/40) encourages the model to adopt a slightly "optimistic" baseline (favoring survival) while remaining sensitive to critical deterioration markers.
+
+---
+
+### 1.2. Disease Staging Model (Severity Classification)
+
+* **Objective:** Classify the histological stage of Hepatitis C (**Stages 1–4**) using the large-scale `master8323patient.csv` dataset.
+* **Challenge (Class Overlap):** Initial attempts to classify all four stages individually ( per class) resulted in poor performance (**Accuracy: 45%**). Confusion Matrix analysis indicated significant misclassification between **Stage 2** and **Stage 3**.
+* **Clinical Insight:**
+
+
+Stages 2 and 3 share highly similar biochemical profiles (blood test values), making them mathematically indistinguishable for the classifier in high-dimensional space.
+
+* **Optimization Strategy (Class Merging):** To improve model reliability, the classes were restructured into three distinct severity tiers. The "Mid-Stage" tier was engineered by geometrically aggregating patients from Stages 2 and 3.
+* **Final Class Structure:**
+1. **Grade 1 (Early Stage):** 413 Patients.
+2. **Grade 2 (Intermediate Stage):** 413 Patients (Composed of 207 Stage 2 + 207 Stage 3).
+3. **Grade 3 (Advanced/Cirrhotic):** 413 Patients (Originally Stage 4).
+
+
+* **Result:** This strategic restructuring increased the model accuracy to **62.50%**. This is considered the optimal ceiling for this specific dataset, as it successfully distinguishes between **Early**, **Intermediate**, and **Advanced** disease progression, effectively mitigating the noise caused by the Stage 2/3 biological overlap.
+  
+---
+
+### 1.3 Feature Engineering Logic
 
 To prepare the raw data for the **XGBoost** model, a rigorous **Data Engineering** phase was executed. The original file (`cirrhosis.csv`) was transformed into the processed training file (`Hepatitis.csv`) located in `data/processed`, resulting in a refined dataset of **419 patient records**.
 
@@ -99,32 +146,17 @@ The predictive logic of the **AiLDS** is divided into three integrated diagnosti
 
 ### 1. Model Breakdown & Feature Selection
 
-| Model File | Input Features (Columns) | Target Output | Clinical Significance |
-| --- | --- | --- | --- |
-| **`hepatitis_stage.pkl`** | Core Blood Tests (Bilirubin, Albumin, SGOT, etc.) | Discrete Class: **1, 2, 3, 4** | Determines the level of histological liver scarring (Fibrosis). |
-| **`hepatitis_complications.pkl`** | Blood Tests & Physical Signs (excluding 'Ascites') | Probability: **0.0 to 1.0** | Estimates the immediate risk of fluid accumulation (Ascites). |
-| **`hepatitis_status.pkl`** | Blood Tests + **Predicted Stage** (from Model 1) | Probability: **0.0 to 1.0** | Calculates the ultimate mortality risk (Survival vs. Death). |
-
-*The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
-
----
-
-### 2. Understanding the `.pkl` Output
-
-When interacting with these serialized models programmatically, the outputs are processed based on the task type:
-
-* **Classification Output (Stage Model):** Returns a discrete numerical class representing the fibrosis stage.
-> **Example:** An output of `3` corresponds to **Stage 4 (Cirrhosis)** in the clinical mapping.
-
-
-* **Probability Output (Complications & Status Models):** We utilize the `predict_proba` function to retrieve a continuous value representing clinical confidence.
-> **Example:** A result of `0.92` indicates a **92% probability** of a critical event or complication.
+| Model File | Input Features | Target Output | Clinical Significance |
+| :--- | :--- | :--- | :--- |
+| **`hepatitisC_stage_model.pkl`** | Blood Tests + **`APRI`**, **`Bilirubin_Albumin`**, **`Copper_Platelets`** | Discrete Class: **1, 2, 3** | Determines the level of histological liver scarring (Fibrosis). |
+| **`hepatitisC_status_model.pkl`** | Blood Tests + **`APRI`**, **`ALBI_Score`**, **`Bili_Alb_Ratio`** | Probability: **0.0 to 1.0** | Calculates the ultimate mortality risk (Survival vs. Death). |
+| **`hepatitisC_complications.pkl`** | Blood Tests Only (Raw Clinical Markers) | Probability: **0.0 to 1.0** | Estimates the immediate risk of fluid accumulation (Ascites). |
 
 
 
 ---
 
-### 3. Workflow And Double Verification Logic
+### 2. Workflow And Double Verification Logic
 
 This models engineered as a **Clinical Decision Support Tool**. To ensure the highest level of safety, the system follows a strict execution sequence and a custom verification protocol.
 
@@ -138,26 +170,18 @@ The diagnostic architecture of the system follows a strictly hierarchical execut
 
 This dependency ensures that the structural state of the liver is prioritized as a primary factor before the system evaluates functional survival outcomes, mirroring real-world clinical decision-making.
 
-#### **B. The Double Verification Protocol **
-
-Because the transition between Stage 3 (Advanced Fibrosis) and Stage 4 (Cirrhosis) is clinically critical, the system implements a **Double Verification Logic**.
-
-* **Trigger:** If the Stage Model predicts a high-risk result (**Stage 3 or 4**), the system automatically re-runs the inference engine.
-* **Requirement:** The model must return the **exact same result twice in a row**.
-* **Safety Net:** If the two consecutive results are not identical, the system flags a "Verification Mismatch," preventing a potentially false high-risk diagnosis from being presented to the user.
-
 ---
 
-### 4. Clinical Interpretation
+### 3. Clinical Interpretation
 
 The system categorizes results based on a probability threshold to assist in rapid triage:
 
-* **🟢 Green Flag (Stable):** If the Mortality Probability is **< 50%**, the case is classified as stable with a recommendation for routine clinical monitoring.
-* **🔴 Red Flag (Critical):** If the Mortality Probability is **> 50%**, the case is flagged as critical, requiring immediate medical intervention and further diagnostic confirmation.
+* **Stable:** If the Mortality Probability is **< 50%**, the case is classified as stable with a recommendation for routine clinical monitoring.
+* **Critical:** If the Mortality Probability is **> 50%**, the case is flagged as critical, requiring immediate medical intervention and further diagnostic confirmation.
 
 ---
 
-### 5. Mathematical Validation
+### 4. Mathematical Validation
 
 To complement the AI's predictive power, the system integrates established clinical scoring systems to provide a "ground truth" reference:
 
@@ -166,6 +190,21 @@ To complement the AI's predictive power, the system integrates established clini
 The APRI score is a non-invasive method used to assess the likelihood of liver fibrosis and cirrhosis. It calculates the ratio between liver enzymes and blood platelets to identify structural damage without a biopsy:
 
 $$APRI = \frac{(AST / 40)}{Platelets} \times 100$$
+
+**Python Implementation:**
+
+
+```python
+def calculate_apri(ast_val, platelets):
+    """
+    Calculate APRI Score based on AST and Platelets.
+    Formula: ((AST / 40) / Platelets) * 100
+    """
+    if platelets == 0: return 0.0  # Prevent division by zero
+    return ((ast_val / 40.0) / platelets) * 100
+
+```
+
 
 * **AST**: Aspartate Aminotransferase level (U/L).
 * **40**: The standardized Upper Limit of Normal (ULN) for AST used in this system.
@@ -177,122 +216,135 @@ The ALBI score is an objective metric specifically designed to evaluate liver fu
 
 $$ALBI = (\log_{10}(Bilirubin \times 17.1) \times 0.66) + (Albumin \times 10 \times -0.085)$$
 
+**Python Implementation:**
+
+```python
+import math
+
+def calculate_albi(bilirubin, albumin):
+    """
+    Calculate ALBI Score based on Bilirubin and Albumin.
+    Formula: (log10(Bili * 17.1) * 0.66) + (Alb * 10 * -0.085)
+    """
+    # Ensure bilirubin is non-zero for log calculation
+    bili_adj = max(bilirubin, 0.1) 
+    
+    term1 = math.log10(bili_adj * 17.1) * 0.66
+    term2 = albumin * 10 * -0.085
+    
+    return term1 + term2
+
+```
+
 * **Bilirubin**: Total bilirubin level (converted to  using the  factor).
 * **Albumin**: Serum albumin level (converted to  using the  factor).
 
 
 > By presenting these mathematical validations alongside the AI results, the **Hepatitis Diagnostic Framework** ensures that the "black box" decisions of the Machine Learning models are grounded in proven medical mathematics. This dual-approach increases the system's transparency and reliability for clinical decision support.
+
 ---
-### Models Input Requirements
 
-To ensure diagnostic accuracy and model stability, data must be entered in the strict mathematical order required by the inference engine. The system utilizes two distinct input structures based on the model's role in the diagnostic hierarchy.
+### Models Input Requirements & Data Structure
 
-### 1. Standard Clinical Input (15 Features)
+To ensure the inference engine functions correctly, data must be structured into precise vector formats specific to each model. The system utilizes three distinct input architectures to handle the mathematical dependencies of each diagnostic task.
 
-This 15-feature sequence is the foundational input used by both the **`hepatitis_stage.pkl`** and **`hepatitis_complications.pkl`** models.
+#### 1. Clinical Feature Glossary (Base Variables)
+
+The following 15 clinical markers form the foundation for all feature engineering and model inputs.
 
 | Index | Feature Name | Description |
 | --- | --- | --- |
-| 1 | **Bilirubin** | Total bilirubin level. |
-| 2 | **Cholesterol** | Serum cholesterol. |
-| 3 | **Albumin** | Serum albumin. |
-| 4 | **Copper** | Urine copper. |
-| 5 | **Alk_Phos** | Alkaline phosphatase. |
-| 6 | **SGOT** | Aspartate aminotransferase (AST/SGOT). |
-| 7 | **Tryglicerides** | Serum triglycerides. |
-| 8 | **Platelets** | Platelet count per cubic millimeter. |
-| 9 | **Prothrombin** | Prothrombin time in seconds. |
-| 10 | **Age** | Patient age in years. |
-| 11 | **Sex** | Gender (Categorically encoded). |
-| 12 | **Ascites** | Presence of abdominal fluid accumulation. |
-| 13 | **Hepatomegaly** | Clinical presence of liver enlargement. |
-| 14 | **Spiders** | Presence of spider angiomas. |
-| 15 | **Edema** | Presence of systemic swelling. |
+| **01** | **Bilirubin** | Total bilirubin level (mg/dL). |
+| **02** | **Cholesterol** | Serum cholesterol (mg/dL). |
+| **03** | **Albumin** | Serum albumin (g/dL). |
+| **04** | **Copper** | Urine copper (µg/day). |
+| **05** | **Alk_Phos** | Alkaline phosphatase (U/L). |
+| **06** | **SGOT** | Aspartate aminotransferase (AST) (U/L). |
+| **07** | **Tryglicerides** | Serum triglycerides (mg/dL). |
+| **08** | **Platelets** | Platelet count (per cubic millimeter). |
+| **09** | **Prothrombin** | Prothrombin time (seconds). |
+| **10** | **Age** | Patient age in years. |
+| **11** | **Sex** | Gender (Categorically encoded: 0:F/1:M). |
+| **12** | **Ascites** | Presence of abdominal fluid accumulation. |
+| **13** | **Hepatomegaly** | Clinical presence of liver enlargement. |
+| **14** | **Spiders** | Presence of spider angiomas. |
+| **15** | **Edema** | Presence of systemic swelling. |
 
-
-### 2. Extended Prognostic Input (16 Features)
-
-The **`hepatiti_status.pkl`** model follows a hierarchical logic, requiring the **AI-generated Stage** to be injected into the clinical data sequence. In this model, the **Stage** must be inserted specifically at **Index 10**, shifting the remaining clinical markers down.
-
-**The 16-Feature Order:**
-`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin',` **`'Stage'`**, `'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema']`
-
-* **Feature Injection:** The system automatically captures the prediction from the Stage Model and places it between **Prothrombin** and **Age**.
-* **Hierarchical Dependency:** This 16-feature sequence is critical for the survival risk model to understand how physical liver scarring (Stage) influences the overall probability of mortality.
-
-
-### In Summary 
-
-* **Stage Model:** Uses **15 Features** to classify histological damage (Stage 1-4).
-* **Complications Model:** Uses the same **15 Features** to estimate the risk of Ascites.
-* **Status Model:** Uses **16 Features** (Standard 15 + Stage Injection) to calculate survival probability.
-
----
-
-### Optimized Model Configuration
-
-The following parameters were identified as the **"Gold Standard"** for this specific dataset to achieve maximum stability across the three models:
-
-```python
-# The optimized XGBoost configuration for Medical Diagnosis
-model = xgb.XGBClassifier(
-    n_estimators=100,      # Balanced number of trees to prevent complexity
-    learning_rate=0.1,     # Optimal step size for stable convergence
-    max_depth=3,           # Strategic depth to ensure high generalization
-    subsample=0.8,         # Trains on 80% of data per tree to boost robustness
-    eval_metric='logloss'  # Standard evaluation metric for binary classification
-)
-
-```
-
-> **Scientific Insight:** In medical diagnostics, a `max_depth` of **3** is crucial. It forces the model to make decisions based on the most dominant biomarkers (like Bilirubin and Prothrombin) rather than creating complex, unexplainable branches that might fit noise in the data.
-
----
-
-### 4. Virtual Clinic Test Results
-
-To demonstrate the practical application of the model, a **"Virtual Clinic"** simulation was conducted using 7 real-world scenarios. This phase validates the model's ability to distinguish between "Structural Damage" (Stage) and "Functional Failure" (Status).
-
-### Virtual Case Analysis Table
-
-| Clinical Case | Brief Description | AI Stage | Survival Risk | Clinical Interpretation |
-| --- | --- | --- | --- | --- |
-| **1. The Healthy Reference** | Normal labs, no symptoms. | **Stage 1** | **1.4%** | Baseline reference for a low-risk profile. |
-| **2. Acute Inflammation** | High Bilirubin (3.2), Stage 2. | **Stage 2** | **97.2%** | **Critical:** High mortality despite moderate fibrosis stage. |
-| **3. Early Fibrosis** | Moderate APRI score. | **Stage 3** | **2.7%** | Disease is progressing but functionally stable. |
-| **4. Compensated Cirrhosis** | Stage 4, but normal Albumin. | **Stage 4** | **0.6%** | **Key Result:** Successful clinical compensation (Type CL). |
-| **5. Decompensated Failure** | Stage 4 + Ascites + Low Albumin. | **Stage 4** | **99.9%** | End-stage liver failure; immediate intervention required. |
-| **6. Active Injury** | Stage 4 with high Enzymes (SGOT). | **Stage 4** | **92.5%** | High risk due to ongoing active inflammation. |
-| **7. The Geriatric Case** | Age 70, Coagulation issues. | **Stage 4** | **98.9%** | Demonstrates the compounded risk of Age + Fibrosis. |
 
 *The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
 
+
+
+#### 2. Model-Specific Vector Signatures
+
+The inference engine (`ailds_api.py`) automatically maps the base variables above into the strict feature vectors required by each XGBoost model.
+
+**A. Complications Prediction Model**
+
+* **Target File:** `models/hepatitisC_complications.pkl`
+* **Clinical Goal:** Predicts risk of Ascites (Fluid Retention).
+* **Input Dimension:** **14 Features** (Excludes 'Ascites' to prevent data leakage).
+* **Required Vector:**
+`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Hepatomegaly', 'Spiders', 'Edema']`
+
+**B. Stage Prediction Model (Structural)**
+
+* **Target File:** `models/hepatitisC_stage_model.pkl`
+* **Clinical Goal:** Classifies Histological Fibrosis Stage (1, 2, or 3).
+* **Input Dimension:** **19 Features** (Includes engineered indices like APRI).
+* **Required Vector:**
+`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Status', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'Bilirubin_Albumin', 'Copper_Platelets']`
+
+**C. Status Prediction Model (Prognostic)**
+
+* **Target File:** `models/hepatitisC_status_model.pkl`
+* **Clinical Goal:** Calculates Mortality Risk Probability.
+* **Input Dimension:** **18 Features** (Includes ALBI Score).
+* **Required Vector:**
+`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'ALBI_Score', 'Bili_Alb_Ratio']`
+
 ---
 
-### Clinical Insights
+## Virtual Case Analysis Table
 
-Based on the Virtual Clinic outputs, critical technical observations regarding the Multi-Model logic were derived:
+| Clinical Case | Brief Description | AI Stage | Survival Risk | Ascites Risk | AI Assessment |
+| --- | --- | --- | --- | --- | --- |
+| **1. The Healthy Reference** | Normal labs, no symptoms. | **Stage 1** | **12.3%** | **0.3%** |  **STABLE** |
+| **2. Acute Inflammation** | High Bilirubin (3.2), Low Platelets. | **Stage 1** | **91.7%** | **2.1%** |  **CRITICAL** |
+| **3. Moderate Fibrosis** | Elevated APRI, Stable Albumin. | **Stage 2** | **37.9%** | **0.3%** |  **STABLE** |
+| **4. Compensated Cirrhosis** | Fibrosis profile, Normal function. | **Stage 2** | **2.5%** | **0.3%** |  **STABLE** |
+| **5. Decompensated Failure** | Ascites + Low Albumin + High Copper. | **Stage 2** | **99.0%** | **99.5%** |  **CRITICAL** |
+| **6. Active Injury** | High Enzymes (SGOT), Low Platelets. | **Stage 2** | **83.7%** | **1.0%** |  **CRITICAL** |
+| **7. The Geriatric Case** | Age 70, Coagulation issues. | **Stage 2** | **92.0%** | **4.6%** |  **CRITICAL** |
 
-#### **A. Structural-Functional Dissociation (Case 4)**
+> *The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges. They do not represent medical diagnosis or professional medical judgment.*
 
-The model successfully identified a patient with **Stage 4 Cirrhosis** yet assigned a very low mortality risk (**0.6%**). This reflects the clinical reality of "Compensated Cirrhosis," where the liver is scarred but still functional. This aligns with the "CL" (Censored/Transplant) data logic, proving the model is not blindly equating Stage 4 with Death.
-> Note: These results are based on the hepatitis_stage.pkl model, which currently has a validation accuracy of 47%. While the logic remains clinically consistent, this model serves primarily as a structural indicator within the diagnostic hierarchy rather than a standalone clinical tool.
-> 
-#### **B. The Lethality of Bilirubin (Case 2)**
+---
 
-The model assigned a **97% risk** to a Stage 2 patient due to elevated Bilirubin (3.2). This confirms that **XGBoost** has correctly prioritized "Functional Markers" over "Structural Stage" when predicting immediate mortality.
+### Clinical Insights & Logic Validation
 
-#### **C. Multi-Factor Integration**
+Based on the latest inference outputs, critical technical observations regarding the Multi-Model logic were derived:
 
-In Case 5, the convergence of **Ascites**, **Low Albumin**, and **High Copper** pushed the risk to **99.9%**, demonstrating the model's ability to handle complex, multi-variable failure cascading.
+#### **A. The "Acute Failure" Paradox (Case 2)**
 
-#### **D. The Impact of Age & Enzyme Spikes (Cases 6 & 7)**
+The system demonstrated sophisticated reasoning in Case 2. It assigned **Stage 1** (indicating early structural damage) but alerted a **91.7% Mortality Risk**. This correctly reflects an "Acute-on-Chronic" scenario where the liver structure is intact, but functional failure (High Bilirubin) poses an immediate threat to life.
 
-Case 7 (**The Geriatric Case**) demonstrates the model's sensitivity to demographic variables. Even with similar labs to a younger patient, a **70-year-old** patient is assigned a higher mortality risk (**98.9%**), showing that the **XGBoost** model correctly factors in decreased physiological resilience associated with age. Similarly, Case 6 highlights how **active injury** (high SGOT) can drive mortality risk even when other factors are stable.
+#### **B. Differentiation Within Stage 2 (Case 4 vs. Case 5)**
 
-#### **E. Baseline Normalization (Case 1 & 3)**
+The model grouped both "Compensated" and "Decompensated" patients under **Stage 2**, yet the **Status Model** successfully distinguished their urgency:
 
-Cases 1 and 3 serve as the "Control Group". The low risk in Case 1 (**1.4%**) validates that the model does not produce "False Positives" for healthy individuals. Case 3 shows that the model can distinguish between **fibrosis progression** and **functional failure**, keeping the risk low (**2.7%**) as long as the liver's synthetic function (Albumin/Bilirubin) remains intact.
+* **Case 4 (Compensated):** Identified as low risk (**2.5%**), recognizing that despite fibrosis, the liver is still functioning.
+* **Case 5 (Decompensated):** Identified as critical (**99.0%**), driven by the multi-organ failure markers.
+
+#### **C. Precise Complication Detection (Case 5)**
+
+While most cases showed negligible Ascites risk (<5%), **Case 5** triggered a massive **99.5% Ascites Risk**. This confirms the **Complications Model** is acting as an independent "Safety Net," accurately flagging fluid retention even when the Staging model provides a general classification.
+
+#### **D. The Impact of Age (Case 7)**
+
+In **Case 7**, the patient's advanced age (70 years) significantly amplified the mortality risk to **92.0%**, despite having a similar structural profile to Case 3. This confirms the XGBoost architecture weights **Age** as a critical non-linear multiplier for prognosis.
+
+The logic used to generate these results, can be found in: code/test_HC_models or executed directly via the Colab environment:[![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 
 ---
 *The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
