@@ -78,13 +78,42 @@ For detailed technical and medical information: regarding NHANES Data Integratio
 
 This ensemble framework assesses liver fibrosis progression and calculates survival risk for **Hepatitis C (HCV)** patients. It integrates structural liver damage with functional outcomes using weighted **XGBoost** architectures to provide a multi-dimensional health assessment.
 
-**(Trained Models):** `hepatitis_stage.pkl`, `hepatitis_complications.pkl`, `hepatiti_status.pkl` (all in `models/` directory).
+**(Trained Models):** `hepatitisC_stage_model.pkl`, `hepatitisC_complications.pkl`, `hepatitisC_status_model.pkl` (all in `models/` directory).
 
-**Core Logic:** The framework employs a **hierarchical decision-making process** where the predicted histological stage acts as a high-weight input for the final survival probability. This mirrors clinical reality: physical scarring (detected by the Stage model) is a primary driver of functional failure and mortality risk.
+The framework employs a **hierarchical decision-making process** where the predicted histological stage acts as a high-weight input for the final survival probability. This mirrors clinical reality: physical scarring (detected by the Stage model) is a primary driver of functional failure and mortality risk.
 
-**Critical Requirement (Positional Logic):** The system processes clinical markers as a strict mathematical matrix. Inputs must be entered in the exact 15-feature order: `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema']`.
+### Serialized Models & Input Matrix
 
-**For detailed technical and medical information:** regarding the **"Structural-Functional Dissociation"** paradox, the 47% stage accuracy disclaimer, and virtual clinic validation, please visit: ➔ `docs/HepatitisC_Model.md`
+The system relies on three specialized models, each requiring a strict mathematical input order to function correctly.
+
+#### **A. Complications Prediction Model**
+
+* **Target File:** `models/hepatitisC_complications.pkl`
+* **Clinical Goal:** Predicts risk of Ascites (Fluid Retention).
+* **Performance:** **95.24% Accuracy**.
+* **Input Dimension:** 14 Features.
+* **Required Feature Order:**
+`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Hepatomegaly', 'Spiders', 'Edema']`
+
+#### **B. Stage Prediction Model (Structural)**
+
+* **Target File:** `models/hepatitisC_stage_model.pkl`
+* **Clinical Goal:** Classifies Histological Fibrosis Stage (1, 2, or 3).
+* **Input Dimension:** 19 Features (Includes calculated indices).
+* **Required Feature Order:**
+`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Status', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'Bilirubin_Albumin', 'Copper_Platelets']`
+
+#### **C. Status Prediction Model (Prognostic)**
+
+* **Target File:** `models/hepatitisC_status_model.pkl`
+* **Clinical Goal:** Calculates Mortality Risk Probability.
+* **Input Dimension:** 18 Features (Includes ALBI Score).
+* **Required Feature Order:**
+`['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'ALBI_Score', 'Bili_Alb_Ratio']`
+
+> **System Note:** The inference engine automatically handles the calculation of derived features (such as `APRI` and `ALBI_Score`). The user interface inputs are mapped to these strict vectors internally.
+
+**For detailed technical and medical information:** regarding the **"Structural-Functional Dissociation"** paradox, the stage accuracy disclaimer, and virtual clinic validation, please visit: ➔ `docs/HepatitisC_Models.md`
 
 ---
 
