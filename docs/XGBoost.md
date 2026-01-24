@@ -82,8 +82,11 @@ The Liver Cancer diagnostic model was specifically optimized to account for the 
 
 To achieve the highest diagnostic accuracy, we utilize an exhaustive **Grid Search** approach within the Google Colab environment. This process automates the selection of optimal settings for the XGBoost algorithm.
 
-### **1. Mathematical Search Space**
+### **Mathematical Search Space**
 The algorithm evaluates every possible combination of parameters defined in the `param_grid`. Based on our current configuration:
+```
+# --- Example ---
+# --- Defining Hyperparameters ---
 
 param_grid = {
     'n_estimators': [100, 300, 500],
@@ -91,6 +94,7 @@ param_grid = {
     'max_depth': [3, 4, 5],
     'subsample': [0.8, 1.0]
 }
+```
 
 * **n_estimators**: 3 values [100, 300, 500]
 * **learning_rate**: 3 values [0.01, 0.05, 0.1]
@@ -101,6 +105,6 @@ param_grid = {
 Since we apply **5-fold Cross-Validation** (`cv=5`), each combination is trained 5 times on different data subsets. 
 **Total Training Iterations** = $54 \times 5 = 270$ individual fits.
 
-> To see Example about Hyperparameter Tuning Strategy: [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=TCOPEuAyyDg-)
+> To see more about Hyperparameter Tuning Strategy : [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=TCOPEuAyyDg-)
 
 ---
