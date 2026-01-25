@@ -15,6 +15,8 @@ Project: AI-Liver-Diseases-Diagnosis-System
 
 Description: Trains an XGBoost classifier to predict liver disease stages (1, 2, 3)
              using blood biomarkers and engineered features (APRI,Bilirubin × Albumin,Copper ÷ Platelets.).
+              - Target Output: 0 ,1 ,2
+
 """
 
 import pandas as pd
