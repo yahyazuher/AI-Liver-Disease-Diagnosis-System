@@ -23,50 +23,6 @@ To ensure our XGBoost model remains a smart learner, we implemented the followin
 
 ### **Decision Tree Architecture (max_depth=4)**
 
-```mermaid
-graph LR
-    %% الاتجاه من اليسار (L) إلى اليمين (R)
-    Start([Input Clinical Data]) --- L1[Level 1: <br/>Primary Question]
-
-    %% Level 1 Split
-    L1 ---|Bilirubin > 1.2?| L2A[Level 2: <br/>Follow-up A]
-    L1 ---|No| L2B[Level 2: <br/>Follow-up B]
-
-    %% Level 2 Splits
-    L2A ---|Albumin < 3.5?| L3A[Level 3: <br/>Final Question]
-    L2A ---|No| L3B[Level 3: <br/>Final Question]
-    
-    L2B ---|Age > 50?| L3C[Level 3: <br/>Final Question]
-    L2B ---|No| L3D[Level 3: <br/>Final Question]
-
-    %% Level 3 Splits (Final Outcomes)
-    L3A --- Out1[[Outcome 1]]
-    L3B --- Out2[[Outcome 2]]
-    L3C --- Out3[[Outcome 3]]
-    L3D --- Out4[[Outcome 4]]
-
-    %% --- التنسيق (Styling) ---
-    
-    %% خلية البداية: أبيض حليبي بـ شفافية 75% ونصوص سوداء
-    style Start fill:#ffffffbf,stroke:#333,stroke-width:2px,color:#000
-
-    %% خلايا الأسئلة: خلفية سوداء (GitHub Dark) مع حواف زرقاء
-    style L1 fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-    style L2A fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-    style L2B fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-    style L3A fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-    style L3B fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-    style L3C fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-    style L3D fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9
-
-    %% خلايا النتائج: خلفية سوداء مع حواف خضراء
-    style Out1 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9
-    style Out2 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9
-    style Out3 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9
-    style Out4 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9
-
-
-```
 
 3. **Data Sampling (`subsample=0.8`):** The model trains on different subsets of the data, forcing it to find robust patterns that exist across the entire dataset.
 4. The model applies L1 and L2 regularization to penalize over-complex trees and ensure better generalization.
@@ -230,8 +186,74 @@ Since we apply **5-fold Cross-Validation** (`cv=5`), each combination is trained
 
 > To see more about Automated Hyperparameter Tuning strategy : [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=TCOPEuAyyDg-)
 
----
----
+<p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
+### **1. Decision Tree Architecture (max_depth=4)**
 
+```mermaid
+graph LR
+    %% Direction: Left to Right
+    Start([Input Clinical Data]) --- L1[Level 1: <br/>Primary Question]
+
+    %% Level 1 Split
+    L1 ---|Bilirubin > 1.2?| L2A[Level 2: <br/>Follow-up A]
+    L1 ---|No| L2B[Level 2: <br/>Follow-up B]
+
+    %% Level 2 Splits
+    L2A ---|Albumin < 3.5?| L3A[Level 3: <br/>Refinement A]
+    L2A ---|No| L3B[Level 3: <br/>Refinement B]
+    L2B ---|Age > 50?| L3C[Level 3: <br/>Refinement C]
+    L2B ---|No| L3D[Level 3: <br/>Refinement D]
+
+    %% Level 3 Splits
+    L3A --- L4A[Level 4: <br/>Final Question]
+    L3A --- L4B[Level 4: <br/>Final Question]
+    L3B --- L4C[Level 4: <br/>Final Question]
+    L3B --- L4D[Level 4: <br/>Final Question]
+    L3C --- L4E[Level 4: <br/>Final Question]
+    L3C --- L4F[Level 4: <br/>Final Question]
+    L3D --- L4G[Level 4: <br/>Final Question]
+    L3D --- L4H[Level 4: <br/>Final Question]
+
+    %% Level 4 Final Outcomes
+    L4A --- Out1[[Outcome 1]]
+    L4B --- Out2[[Outcome 2]]
+    L4C --- Out3[[Outcome 3]]
+    L4D --- Out4[[Outcome 4]]
+    L4E --- Out5[[Outcome 5]]
+    L4F --- Out6[[Outcome 6]]
+    L4G --- Out7[[Outcome 7]]
+    L4H --- Out8[[Outcome 8]]
+
+    %% --- Styling Section ---
+    %% Start Node: Milky White 75% opacity
+    style Start fill:#ffffffbf,stroke:#333,stroke-width:2px,color:#000;
+
+    %% Intermediate Nodes: GitHub Dark with Blue Borders
+    style L1 fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L2A fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L2B fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L3A fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L3B fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L3C fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L3D fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4A fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4B fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4C fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4D fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4E fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4F fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4G fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+    style L4H fill:#0d1117,stroke:#58a6ff,stroke-width:2px,color:#c9d1d9;
+
+    %% Outcome Nodes: GitHub Green Borders
+    style Out1 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out2 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out3 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out4 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out5 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out6 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out7 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+    style Out8 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
+```
 ح
