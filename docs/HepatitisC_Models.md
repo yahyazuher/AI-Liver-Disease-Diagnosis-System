@@ -278,7 +278,7 @@ The following 15 clinical markers form the foundation for all feature engineerin
 
 #### 2. Model-Specific Vector Signatures
 
-The inference engine (`ailds_api.py`) automatically maps the base variables above into the strict feature vectors required by each XGBoost model.
+To ensure successful inference using the XGBoost engines, data must be passed as a vector following the exact sequence defined below.
 
 **A. Complications Prediction Model**
 
@@ -287,8 +287,9 @@ The inference engine (`ailds_api.py`) automatically maps the base variables abov
 * **Input Dimension:** **14 Features** (Excludes 'Ascites' to prevent data leakage).
 * **Required Vector:**
 `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Hepatomegaly', 'Spiders', 'Edema']`
+> Since the Hepatitis_C 3-models are interconnected and operate in coordination with one another, the 'Stage' is treated as a user request that the system provides in Stage model, assuming the user does not already know it(More info: docs/XGBoost.md).
 
-**B. Stage Prediction Model (Structural)**
+**B. Stage Prediction Model**
 
 * **Target File:** `models/hepatitisC_stage_model.pkl`
 * **Clinical Goal:** Classifies Histological Fibrosis Stage (1, 2, or 3).
@@ -296,7 +297,7 @@ The inference engine (`ailds_api.py`) automatically maps the base variables abov
 * **Required Vector:**
 `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Status', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'Bilirubin_Albumin', 'Copper_Platelets']`
 
-**C. Status Prediction Model (Prognostic)**
+**C. Status Prediction Model**
 
 * **Target File:** `models/hepatitisC_status_model.pkl`
 * **Clinical Goal:** Calculates Mortality Risk Probability.
