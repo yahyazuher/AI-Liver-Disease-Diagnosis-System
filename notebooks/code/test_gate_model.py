@@ -1,3 +1,19 @@
+"""
+[IMPORTANT NOTE / ملاحظة هامة]
+--------------------------------------------------
+English: This script is specifically designed and optimized to run in the GOOGLE COLAB environment.
+- It is configured to automatically download models and training files directly from GitHub.
+- Copy-pasting this code to other environments (local IDEs) may require adjustments 
+  to file paths and library configurations.
+
+Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشرة داخل بيئة 
+- GitHub لضمان التشغيل الفوري تم إعداد الكود ليقوم بتحميل النماذج وملفات التدريب تلقائياً من 
+- نسخ هذا الكود وتشغيله في تطبيقات أو بيئات أخرى قد يتطلب تعديلات في مسارات الملفات وإعدادات المكتبات.
+--------------------------------------------------
+Created by: Yahya Zuher
+Project: AI-Liver-Diseases-Diagnosis-System
+"""
+
 import pandas as pd
 import joblib
 import os
@@ -8,26 +24,22 @@ import requests
 MODEL_FILENAME = 'gate_model.pkl'
 
 # Direct link to the raw binary model file
-GITHUB_MODEL_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Based-Multi-Model-System-for-Liver-Disease-Risk-Assessment/main/models/gate_model.pkl'
+GITHUB_MODEL_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/models/gate_model.pkl'
 
 def download_model_if_missing():
-    """
-    Checks if the model exists locally. If not, downloads the pre-trained .pkl file
-    directly from the GitHub repository.
-    """
     if not os.path.exists(MODEL_FILENAME):
         print(f"Model '{MODEL_FILENAME}' not found locally.")
         print(f"Downloading pre-trained model from GitHub...")
-        
+
         try:
             response = requests.get(GITHUB_MODEL_URL)
             response.raise_for_status() # Check for HTTP errors
-            
+
             with open(MODEL_FILENAME, 'wb') as f:
                 f.write(response.content)
-            
+
             print("Download successful. Model saved locally.")
-            
+
         except Exception as e:
             print(f"Error downloading model: {e}")
             sys.exit(1)
@@ -37,7 +49,7 @@ def download_model_if_missing():
 def run_prediction_tests():
     # 1. Ensure Model is Available
     download_model_if_missing()
-    
+
     try:
         model = joblib.load(MODEL_FILENAME)
     except Exception as e:
@@ -67,8 +79,8 @@ def run_prediction_tests():
         patients_df = pd.DataFrame(new_patients_data, columns=correct_columns)
     except AttributeError:
         # Fallback if attribute is missing
-        cols = ['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'Alkaline_Phosphotase', 
-                'Alamine_Aminotransferase', 'Aspartate_Aminotransferase', 'Total_Protiens', 
+        cols = ['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'Alkaline_Phosphotase',
+                'Alamine_Aminotransferase', 'Aspartate_Aminotransferase', 'Total_Protiens',
                 'Albumin', 'Albumin_and_Globulin_Ratio']
         patients_df = pd.DataFrame(new_patients_data, columns=cols)
 
@@ -89,23 +101,23 @@ def run_prediction_tests():
         else:
             status_label = "Healthy"
             icon = "🟢"
-        
+
         # Validation Logic
         if i < 6:
             # Cases 1-6 are clearly Sick
             expected = "Sick"
             is_correct = "PASS" if result == 0 else "FAIL"
-            
-        elif i == 7 or i == 8: 
+
+        elif i == 7 or i == 8:
             # Cases 8 and 9 (Indices 7 & 8) are medically borderline
             expected = "Very Close"
-            is_correct = "BORDERLINE" 
-            
+            is_correct = "BORDERLINE"
+
         else:
             # Cases 7 and 10 are clearly Healthy
             expected = "Healthy"
             is_correct = "PASS" if result == 1 else "FAIL"
-        
+
         print(f"{i+1:<5} | {expected:<12} | {icon} {status_label:<20} | {is_correct}")
     print("-" * 75)
 
