@@ -1,3 +1,19 @@
+"""
+[IMPORTANT NOTE / ملاحظة هامة]
+--------------------------------------------------
+English: This script is specifically designed and optimized to run in the GOOGLE COLAB environment.
+- It is configured to automatically download models and training files directly from GitHub.
+- Copy-pasting this code to other environments (local IDEs) may require adjustments 
+  to file paths and library configurations.
+
+Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشرة داخل بيئة 
+- GitHub لضمان التشغيل الفوري تم إعداد الكود ليقوم بتحميل النماذج وملفات التدريب تلقائياً من 
+- نسخ هذا الكود وتشغيله في تطبيقات أو بيئات أخرى قد يتطلب تعديلات في مسارات الملفات وإعدادات المكتبات.
+--------------------------------------------------
+Created by: Yahya Zuher
+Project: AI-Liver-Diseases-Diagnosis-System
+"""
+
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -7,23 +23,17 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import pickle
 
-# =================================================================
-# AiLDS: Fatty Liver (NAFLD) Diagnostic Module
-# Project: AI-Based Multi-Model System for Liver Disease Risk Assessment
-# Author: Yahya Zuher
-# =================================================================
-
 print("--- Initializing Fatty Liver (NAFLD) Diagnostic System ---")
 
 
-RAW_DATA_URL = "https://raw.githubusercontent.com/yahyazuher/AI-Based-Multi-Model-System-for-Liver-Disease-Risk-Assessment/main/data/processed/FattyLiver.csv"
+RAW_DATA_URL = "https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/FattyLiver.csv"
 
 try:
     print(f"Accessing remote repository: {RAW_DATA_URL}")
     df = pd.read_csv(RAW_DATA_URL)
-    print(f"✔ Dataset synchronized successfully. Total records: {len(df)}")
+    print(f"Dataset synchronized successfully. Total records: {len(df)}")
 except Exception as e:
-    print(f"✘ Error: Connection to repository failed. {e}")
+    print(f"Error: Connection to repository failed. {e}")
     raise SystemExit
 
 # ---------------------------------------------------------
@@ -49,7 +59,7 @@ def clinical_diagnosis_logic(row):
     trig_high = row['Triglycerides'] > 150
     alt_high = row['ALT'] > 40
     ggt_high = row['GGT'] > 40
-    
+
     if (trig_high and (alt_high or ggt_high)) or (alt_high and ggt_high):
         return 1  # NAFLD Detected
     return 0      # Healthy
@@ -73,10 +83,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # ---------------------------------------------------------
 print("\nTraining diagnostic model on clinical biomarkers...")
 model = xgb.XGBClassifier(
-    n_estimators=100, 
-    learning_rate=0.1, 
-    max_depth=4, 
-    subsample=0.8, 
+    n_estimators=100,
+    learning_rate=0.1,
+    max_depth=4,
+    subsample=0.8,
     eval_metric='logloss',
     use_label_encoder=False
 )
