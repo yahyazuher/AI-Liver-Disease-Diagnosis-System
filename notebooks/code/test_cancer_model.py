@@ -1,3 +1,19 @@
+"""
+[IMPORTANT NOTE / ملاحظة هامة]
+--------------------------------------------------
+English: This script is specifically designed and optimized to run in the GOOGLE COLAB environment.
+- It is configured to automatically download models and training files directly from GitHub.
+- Copy-pasting this code to other environments (local IDEs) may require adjustments 
+  to file paths and library configurations.
+
+Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشرة داخل بيئة 
+- GitHub لضمان التشغيل الفوري تم إعداد الكود ليقوم بتحميل النماذج وملفات التدريب تلقائياً من 
+- نسخ هذا الكود وتشغيله في تطبيقات أو بيئات أخرى قد يتطلب تعديلات في مسارات الملفات وإعدادات المكتبات.
+--------------------------------------------------
+Created by: Yahya Zuher
+Project: AI-Liver-Diseases-Diagnosis-System
+"""
+
 import pandas as pd
 import joblib
 import os
@@ -9,18 +25,18 @@ def load_model():
     Downloads and loads the trained XGBoost model from GitHub.
     """
     model_url = 'https://github.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/raw/main/models/cancer_model.pkl'
-    
+
     try:
         print(f"Connecting to GitHub to fetch: {model_url.split('/')[-1]}...")
         response = requests.get(model_url)
-        
+
         # Check if the download was successful
         if response.status_code == 200:
             # Use BytesIO to let joblib read the binary content directly from RAM
             return joblib.load(io.BytesIO(response.content))
         else:
             raise Exception(f"Download failed. Status code: {response.status_code}")
-            
+
     except Exception as e:
         print(f"Cloud Load Failed: {e}")
         # Fallback: Check if the file exists locally
