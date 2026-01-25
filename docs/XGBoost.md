@@ -21,9 +21,9 @@ To ensure our XGBoost model remains a smart learner, we implemented the followin
 
 ### **Decision Tree Architecture (max_depth=4)**
 
-1. Tree Depth (max_depth=4): This constraint prevents the model from growing overly complex trees that might capture "noise" or specific outliers in the training data, ensuring that the model focuses on broader, more significant clinical patterns. This is **illustrated** by the maximum depth of four shown in the Architecture & Logic Schematics (1) at the end of the page.
+1. Tree Depth (max_depth=4): This constraint prevents the model from growing overly complex trees that might capture "noise" or specific outliers in the training data, ensuring that the model focuses on broader, more significant clinical patterns. This is **illustrated** by the maximum depth of four shown in the **Architecture & Logic Schematics (1)** at the end of the page.
 
-Stochastic Data Sampling (subsample=0.8): During training, the model only sees a random 80% of the dataset for each tree. By introducing this variation, we force the model to find robust patterns that are consistent across the entire dataset, rather than becoming over-reliant on any single subset of patient records.
+2. StStochastic Data Sampling (subsample=0.8): During training, the model only sees a random 80% of the dataset for each tree. This variation forces the model to find robust patterns that work for the entire dataset, rather than just memorizing a specific group of patient records. This process is illustrated in the **Architecture & Logic Schematics (2)** at the end of the page, which shows the internal 80/20 split used during the learning process.
 
 L1 & L2 Regularization: The model applies mathematical penalties to over-complex structures. L1 (Lasso) encourages sparsity by potentially zeroing out less important features, while L2 (Ridge) prevents any single feature from having an extreme influence. Together, they ensure better generalization, allowing the model to perform accurately on new, unseen patient data.
 
@@ -74,7 +74,7 @@ Traditional algorithms use a "greedy" approach, stopping the tree growth as soon
 
 ---
 
-## **Models Training Strategy**
+## **Models Training Strategy** Validation Set
 
 To ensure the system acts as a "Smart Clinician" rather than a "Rote Learner," I implemented a strict data separation and feature dropping protocol. This prevents the model from "cheating" by seeing the answers or irrelevant metadata during the learning phase.
 
@@ -262,82 +262,36 @@ graph LR
     style Out7 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
     style Out8 fill:#0d1117,stroke:#238636,stroke-width:3px,color:#c9d1d9;
 ```
+---
+### 2. Random Sampling & Self-Testing
 
-### 2.
-
-
-
-
-
-
-
-
-
-
-```merma
+```mermaid
 graph TD
-    %% --- 1. Global Data Split ---
     Data[Total Data: 100%] --> Split{Global Split}
-    Split -->|20% (Unseen)| TestSet[Final Exam: Locked Box]
-    Split -->|80% (Training)| TrainSet[Training Pool: Study Room]
+    Split -->|20%| TestSet[Final Exam: Locked Box]
+    Split -->|80%| TrainPool[Training Pool]
 
-    %% --- 2. Internal Training (XGBoost Logic) ---
-    subgraph "Internal Training Workflow (Sequential Learning)"
-        direction TB
+    subgraph "Internal Training (The Loop)"
+        TrainPool --> InternalSplit{Internal Split}
+        InternalSplit -->|80%| SubTrain[Actual Training Data: 80% of Training Set]
+        InternalSplit -->|20%| ValSet[Validation: 20% of Training Set]
 
-        %% Tree 1 Details (as a subgraph)
-        subgraph "Tree 1 (max_depth=2 Example)"
-            direction LR
-            T1_L1[Level 1: Question] -->|Yes| T1_L2A[Level 2: Outcome A]
-            T1_L1 -->|No| T1_L2B[Level 2: Outcome B]
-        end
-
-        %% Flow from TrainSet to Tree 1
-        TrainSet -->|Subsample 80%| T1_L1
-
-        %% Tree 1 Output & Error Calculation
-        T1_L2A --> Error1[Identify Mistakes on unseen 20%]
-        T1_L2B --> Error1
-
-        %% Tree 2 Details (as a subgraph - learning from Error1)
-        subgraph "Tree 2 (Corrects Tree 1 Mistakes)"
-            direction LR
-            T2_L1[Level 1: New Question] -->|Yes| T2_L2A[Level 2: Refined Outcome A]
-            T2_L1 -->|No| T2_L2B[Level 2: Refined Outcome B]
-        end
+        SubTrain --> Tree1[Tree 1]
+        Tree1 --> ErrorCalc{Quiz}
+        ValSet -.->|Monitor Performance| ErrorCalc
         
-        %% Flow from Error1 to Tree 2
-        Error1 -->|Focus on Residuals| T2_L1
-
-        %% Tree 2 Output & Error Calculation
-        T2_L2A --> Error2[Identify Remaining Errors]
-        T2_L2B --> Error2
-
-        %% Continuation to further trees...
-        Error2 --> TreeN[... Tree N: Final Polishing ...]
+        ErrorCalc -->|Identify Mistakes| Tree2[Tree 2]
+        Tree2 --> TreeN[... Tree N ...]
     end
 
-    %% --- 3. Final Ensemble & Evaluation ---
     TreeN --> Ensemble[Final Ensemble Model]
-    Ensemble --> FinalTest{Final Test on Locked Box}
+    Ensemble --> FinalTest{Final Exam}
     TestSet --> FinalTest
-    FinalTest --> Metrics[Accuracy / Precision / Recall]
+    FinalTest --> Score[Final Accuracy / Metrics]
 
-    %% --- Styling ---
-    style TestSet fill:#f1f1f1,stroke:#333,stroke-dasharray: 5 5
-    style TrainSet fill:#e1f5fe,stroke:#01579b
-    style Ensemble fill:#c8e6c9,stroke:#2e7d32
-    style Error1 fill:#ffecb3,stroke:#ff8f00
-    style Error2 fill:#ffecb3,stroke:#ff8f00
-    style T1_L1 fill:#e1f5fe,stroke:#01579b
-    style T2_L1 fill:#e1f5fe,stroke:#01579b
-    style T1_L2A fill:#c8e6c9,stroke:#2e7d32
-    style T1_L2B fill:#c8e6c9,stroke:#2e7d32
-    style T2_L2A fill:#c8e6c9,stroke:#2e7d32
-    style T2_L2B fill:#c8e6c9,stroke:#2e7d32
-
+    linkStyle 7 stroke:orange,stroke-width:2px,stroke-dasharray: 5 5;
 ```
-
+---
 
 
 
