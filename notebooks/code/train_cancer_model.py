@@ -14,6 +14,8 @@ Created by: Yahya Zuher
 Project: AI-Liver-Diseases-Diagnosis-System
 
     - RUNS: Inference on standard test cases.
+    - Result is between 0.0 and 1.0
+
 """
 import pandas as pd
 import numpy as np
