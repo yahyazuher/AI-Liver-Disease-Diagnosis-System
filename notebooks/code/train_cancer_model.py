@@ -67,7 +67,6 @@ model = xgb.XGBClassifier(
     max_depth=3,
     subsample=0.8,
     eval_metric='logloss',
-    use_label_encoder=False
 )
 
 model.fit(X_train, y_train)
