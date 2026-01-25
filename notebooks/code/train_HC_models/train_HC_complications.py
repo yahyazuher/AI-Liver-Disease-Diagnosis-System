@@ -74,7 +74,6 @@ def train_model():
         colsample_bytree=0.8,   # Feature sampling ratio
         scale_pos_weight=ratio, # Automatically balance classes
         eval_metric='logloss',
-        use_label_encoder=False,
         random_state=42
     )
 
