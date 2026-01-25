@@ -13,7 +13,6 @@ Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشر
 Created by: Yahya Zuher
 Project: AI-Liver-Diseases-Diagnosis-System
 
-
     - Target: Ascites (0 = Healthy, 1 = Patient)
 """
 
