@@ -13,8 +13,8 @@ Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشر
 Created by: Yahya Zuher
 Project: AI-Liver-Diseases-Diagnosis-System
 
-Description: This script fetches training data directly from GitHub and trains
-             an optimized XGBoost model for status prediction.
+        - Target Output: 0.0 - 1.0 Presentage or int(0,1)
+
 """
 
 import pandas as pd
