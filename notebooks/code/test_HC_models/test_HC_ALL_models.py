@@ -1,10 +1,18 @@
 """
-AI Liver Disease Diagnosis System 
---------------------------------------------------------
+[IMPORTANT NOTE / ملاحظة هامة]
+--------------------------------------------------
+English: This script is specifically designed and optimized to run in the GOOGLE COLAB environment.
+- It is configured to automatically download models and training files directly from GitHub.
+- Copy-pasting this code to other environments (local IDEs) may require adjustments 
+  to file paths and library configurations.
+
+Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشرة داخل بيئة 
+- GitHub لضمان التشغيل الفوري تم إعداد الكود ليقوم بتحميل النماذج وملفات التدريب تلقائياً من 
+- نسخ هذا الكود وتشغيله في تطبيقات أو بيئات أخرى قد يتطلب تعديلات في مسارات الملفات وإعدادات المكتبات.
+--------------------------------------------------
 Created by: Yahya Zuher
 Project: AI-Liver-Diseases-Diagnosis-System
 
-    - FEATURES: Auto-downloads missing models from GitHub.
     - RUNS: Inference on standard test cases.
 """
 
