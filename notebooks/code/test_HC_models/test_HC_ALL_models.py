@@ -1,5 +1,5 @@
 """
-AI Liver Disease Diagnosis System (Final Inference Script)
+AI Liver Disease Diagnosis System 
 --------------------------------------------------------
 Created by: Yahya Zuher
 Project: AI-Liver-Diseases-Diagnosis-System
