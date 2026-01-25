@@ -1,3 +1,20 @@
+"""
+[IMPORTANT NOTE / ملاحظة هامة]
+--------------------------------------------------
+English: This script is specifically designed and optimized to run in the GOOGLE COLAB environment.
+- It is configured to automatically download models and training files directly from GitHub.
+- Copy-pasting this code to other environments (local IDEs) may require adjustments 
+  to file paths and library configurations.
+
+Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشرة داخل بيئة 
+- GitHub لضمان التشغيل الفوري تم إعداد الكود ليقوم بتحميل النماذج وملفات التدريب تلقائياً من 
+- نسخ هذا الكود وتشغيله في تطبيقات أو بيئات أخرى قد يتطلب تعديلات في مسارات الملفات وإعدادات المكتبات.
+--------------------------------------------------
+Created by: Yahya Zuher
+Project: AI-Liver-Diseases-Diagnosis-System
+
+    - RUNS: Inference on standard test cases.
+"""
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -7,16 +24,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 
-# =================================================================
-# AiLDS: Liver Cancer Risk Assessment Module (XGBoost)
-# Project: AI-Based Multi-Model System for Liver Disease Risk Assessment
-# Author: Yahya Zuher
-# =================================================================
-
 print("--- Initializing Liver Cancer Risk Assessment System ---")
 
 
-DATA_URL = "https://raw.githubusercontent.com/yahyazuher/AI-Based-Multi-Model-System-for-Liver-Disease-Risk-Assessment/main/data/processed/The_Cancer_data_1500.csv"
+DATA_URL = "https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/The_Cancer_data_1500.csv"
 
 try:
     print(f"Fetching dataset from: {DATA_URL}")
