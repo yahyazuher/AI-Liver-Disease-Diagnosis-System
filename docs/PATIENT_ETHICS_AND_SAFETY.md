@@ -35,53 +35,7 @@ safety over optimistic predictions.
 
 ---
 
-## 2. The Veto System (Fail-Safe Architecture)
-
-### Why a Veto System?
-Some models rely on biochemical markers that may be:
-- Missing
-- Incomplete
-- Replaced with default values
-
-Allowing such models to make final medical decisions **without supervision** was considered
-ethically unsafe.
-
-### How It Works
-The system applies **cross-model oversight**:
-
-- A *primary model* may issue a favorable decision.
-- A *supervisory model* independently evaluates structural or high-risk indicators.
-- If a conflict is detected, the permissive decision is **automatically overridden**.
-
-This guarantees that **safety always dominates model autonomy**.
-
-Related documentation:
-- `Hepatitis_Model.md`
-
----
-
-## 3. Example: Fatty Liver & Blood Donation Safety
-
-This project contains multiple models.  
-The following example illustrates the ethical logic using **one model only**.
-
-### Scenario
-- The donor model predicts **Eligible**
-- Some biochemical inputs were missing or defaulted
-- The fibrosis model detects **Stage ≥ 2** using Platelets / Prothrombin
-
-### Ethical Outcome
-- The system triggers the **Veto**
-- The donor status is changed to **Rejected**
-- Potential harm is prevented
-
-Model details:
-- `docs/FattyLiver_Model.md`  
-- Training data: `data/processed/FattyLiver_Learning_db.csv`
-
----
-
-## 4. Unified Input & Accountability
+## 2. Unified Input & Accountability
 
 ### Design Choice
 The frontend sends **one unified JSON payload** containing all user data.
@@ -93,7 +47,7 @@ The frontend sends **one unified JSON payload** containing all user data.
 
 ---
 
-## 5. Data Privacy & De-Identification
+## 3. Data Privacy & De-Identification
 
 Patient privacy is treated as a **hard constraint**, not an optional feature.
 
@@ -103,13 +57,13 @@ Patient privacy is treated as a **hard constraint**, not an optional feature.
 - Models operate on numerical arrays only
 - No personal identity can be reconstructed
 
-Model details:
+(e.g. `SEQN`) Model details:
 - `docs/FattyLiver_Model.md`  
 - Training data: `data/processed/FattyLiver_Learning_db.csv`
   
 ---
 
-## 6. Guideline-Based Labeling (No Heuristic Diagnosis)
+## 4. Guideline-Based Labeling
 
 All target labels are created using **rule-based labeling** grounded in
 established clinical guidelines.
@@ -119,33 +73,20 @@ established clinical guidelines.
 - Makes predictions explainable
 - Ensures clinical defensibility
 
-Labeling logic:
-- `docs/FattyLiver_Model.md`
+More Info [Project Comprehensive Feature Dictionary](https://github.com/yahyazuher/AI-Liver-Disease-Diagnosis-System/blob/main/README.md)
 
 ---
 
-## 7. Avoiding Genetic Determinism
 
-The system is explicitly designed to avoid **fatalistic predictions**.
 
-- Genetic risk increases probability — not certainty
-- Lifestyle factors can amplify or reduce risk
-- Protective behavior is treated as an ethical modifier
-
-This ensures **non-discrimination** and preserves patient agency.
-
-Related model:
-- `docs/Cancer_Risk_Model.md`
-
----
-
-## 8. Scope & Responsibility
+## 5. Scope & Responsibility
 
 This system is a **clinical decision-support tool** only.
 
-- It does **not** replace medical professionals
-- The Veto System is a computational safeguard, not a guarantee
-- Final responsibility always lies with qualified clinicians
+- It does **not** replace medical professionals.
+- Final responsibility always lies with qualified clinicians.
+- This system is for research and educational purposes only.
+- When using these tools, I am not responsible for anything in any way.
 
 ---
 
@@ -172,10 +113,6 @@ To avoid "AI Hallucinations," the target variables for the **Fatty Liver Model**
   
 ---
 
-## Final Statement
+## Final Statement  
 
-* When uncertainty exists, the system chooses **refusal over reassurance**.
-  
-* Safety is enforced by design — not left to model confidence only.
-
-This document outlines the ethical framework governing the **Multi-Model AI Liver Disease Diagnostic System**, emphasizing patient safety, data privacy, and the fail-safe mechanisms implemented to prevent medical errors.
+This document outlines the ethical framework governing the **Multi-Model AI Liver Disease Diagnostic System**, emphasizing patient safety, data privacy, and the fail-safe mechanisms implemented to prevent medical errors in this project.
