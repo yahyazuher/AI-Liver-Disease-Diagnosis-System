@@ -16,18 +16,22 @@ Project: AI-Liver-Diseases-Diagnosis-System
         - Target Output: 0.0 - 1.0 Presentage
 """
 
+
 import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import joblib
 import requests
 import io
 import sys
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # --- Configuration ---
 DATA_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/HepatitisC.csv'
 MODEL_FILENAME = 'hepatitis_complications.pkl'
+CONFUSION_MATRIX_FILENAME = 'confusion_matrix_complications.png'
 
 def load_data():
     """Fetches the dataset directly from the GitHub repository."""
@@ -89,6 +93,35 @@ def train_model():
     print(f" Accuracy: {acc:.2f}%")
     print("-" * 40)
     print(classification_report(y_test, y_pred, target_names=['No Ascites', 'Ascites']))
+
+    # ================================================================
+    # SECTION: CONFUSION MATRIX VISUALIZATION
+    # ================================================================
+    # Note: The Confusion Matrix provides a granular view of prediction performance.
+    # In clinical diagnostics, this is critical for distinguishing between:
+    # - False Negatives: Missing a case of Ascites (High Risk).
+    # - False Positives: Incorrectly flagging a healthy patient (Anxiety/Cost).
+    # The heatmap below visualizes these metrics using the Test Set.
+    # ================================================================
+    
+    cm = confusion_matrix(y_test, y_pred)
+    
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=True,
+                xticklabels=['No Ascites', 'Ascites'],
+                yticklabels=['No Ascites', 'Ascites'])
+    
+    plt.title('Confusion Matrix: Ascites Prediction', fontsize=14, pad=20)
+    plt.ylabel('Actual Clinical Status', fontsize=12)
+    plt.xlabel('Model Prediction', fontsize=12)
+    
+    print(f" Saving confusion matrix to {CONFUSION_MATRIX_FILENAME}...")
+    plt.savefig(CONFUSION_MATRIX_FILENAME, dpi=300, bbox_inches='tight')
+    plt.show()
+    
+    # ================================================================
+    # END VISUALIZATION
+    # ================================================================
 
     # 8. Save
     print(f" Saving model to {MODEL_FILENAME}...")
