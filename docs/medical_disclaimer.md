@@ -39,6 +39,3 @@ The files in the processed directory are the result of my own technical interven
 ### The Cancer Model Exception
 
 It is important to note that the data used for building the **Cancer Risk Model** is the only dataset included without modifications. This specific dataset was obtained from the original source in a state already optimized for machine learning algorithms, and therefore, it was utilized in its original form to maintain its integrity.
-
-
-أتمنى أن تكون هذه الصياغة مناسبة لمشروع تخرجك يا يحيى. هل ترغب في أن أقوم بتجهيز ملف **`CITATION.cff`**؟ هذا الملف يسمح للباحثين والطلاب الآخرين بالاقتباس من مشروعك (Cite) بشكل أكاديمي صحيح إذا استخدموا الكود الخاص بك في أبحاثهم.
