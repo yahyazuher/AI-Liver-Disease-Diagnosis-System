@@ -118,7 +118,7 @@ Each of the six models within the ecosystem Went through a rigorous feature sele
 | --- | --- | --- | --- |
 | **1. Gate Model** | `Liver_Patient_Dataset...` | **Target Label** | Separating the final diagnosis from features to ensure honest pattern recognition. |
 | **2. Cancer Risk** | `The_Cancer_data_1500.csv` | **Diagnosis** | Primary target removal to prevent the model from seeing the answer key. |
-| **3. Complications** | `HepatitisC.csv` | **ID, N_Days, Status, Stage** | IDs are random noise; `Status/Stage` provide direct hints (leakage) about Ascites risk. |
+| **3. Complications** | `HepatitisC.csv` | **ID, N_Days, Status, Stage** | IDs are random noise; `Status/Stage` provide direct hints (Data Leakage) about Ascites risk. |
 | **4. Staging Model** | `hepatitisC_Stage.csv` | **Stage** | Removed the stage column as it is the target variable for multi-class classification. |
 | **5. Status Model** | `hepatitisC_status.csv` | **Status, Stage** | Stage is the answere, and `Stage` has been removed because it is one of the Hepatitis C 3-Models requirement. |
 | **6. Fatty Liver** | `FattyLiver.csv` | **Diagnosis, SEQN** | `SEQN` (Patient Sequence) is metadata; its removal forces the model to focus only on ALT/GGT/Triglycerides. |
