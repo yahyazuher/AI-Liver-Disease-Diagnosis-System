@@ -16,6 +16,7 @@ Project: AI-Liver-Diseases-Diagnosis-System
         - Target Output: 0.0 - 1.0 Presentage
 """
 
+
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -23,24 +24,27 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import joblib
 import os
 import sys
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # --- Configuration (GitHub Integration) ---
 RAW_DATA_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/hepatitisC_status.csv'
 MODEL_FILENAME = 'hepatitisC_status_model.pkl'
+CONFUSION_MATRIX_FILENAME = 'confusion_matrix_status.png'
 
 def get_live_dataset():
     """Downloads the dataset from GitHub."""
     try:
-        print(f"⬇️ Downloading dataset from GitHub...")
+        print(f"⬇Downloading dataset from GitHub...")
         df = pd.read_csv(RAW_DATA_URL)
-        print(f"✅ Successfully loaded {len(df)} records.")
+        print(f"Successfully loaded {len(df)} records.")
         return df
     except Exception as e:
-        sys.exit(f"❌ Critical Error: Could not fetch data. {e}")
+        sys.exit(f"Critical Error: Could not fetch data. {e}")
 
 def add_medical_features(df):
     """Adds ALBI and APRI features for high-precision mortality prediction."""
@@ -59,7 +63,7 @@ def add_medical_features(df):
     return df_eng
 
 def run_pipeline():
-    print("🚀 Starting Automated Training Pipeline...")
+    print("Starting Automated Training Pipeline...")
 
     # 1. Get Data from GitHub
     df = get_live_dataset()
@@ -103,21 +107,48 @@ def run_pipeline():
     )
 
     # 7. Model Training
-    print("⚙️ Training model on remote data...")
+    print("Training model on remote data...")
     model.fit(X_train, y_train)
 
     # 8. Evaluation
     y_pred = model.predict(X_test)
-    print("\n📈 Final Validation Results:")
-    print(f"🎯 Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+    print("\nFinal Validation Results:")
+    print(f"Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
     print("-" * 30)
     print(classification_report(y_test, y_pred))
 
+    # ================================================================
+    # SECTION: CONFUSION MATRIX VISUALIZATION (BINARY)
+    # ================================================================
+    # This matrix evaluates the model's ability to predict patient mortality risk.
+    # It specifically highlights:
+    # - True Positives: Correctly identifying high-risk patients.
+    # - False Negatives: Critical misses where a high-risk patient is classified as stable.
+    # ================================================================
+    
+    cm = confusion_matrix(y_test, y_pred)
+    
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=True,
+                xticklabels=['Status 0 (Stable)', 'Status 1 (Risk)'],
+                yticklabels=['Status 0 (Stable)', 'Status 1 (Risk)'])
+    
+    plt.title('Confusion Matrix: Mortality Risk Prediction', fontsize=14, pad=20)
+    plt.ylabel('Actual Patient Status', fontsize=12)
+    plt.xlabel('Model Prediction', fontsize=12)
+    
+    print(f" Saving confusion matrix to {CONFUSION_MATRIX_FILENAME}...")
+    plt.savefig(CONFUSION_MATRIX_FILENAME, dpi=300, bbox_inches='tight')
+    plt.show()
+    
+    # ================================================================
+    # END VISUALIZATION
+    # ================================================================
+
     # 9. Global Save
-    print(f"💾 Saving model locally: {MODEL_FILENAME}")
+    print(f"Saving model locally: {MODEL_FILENAME}")
     model.fit(X, y) # Retrain on full dataset
     joblib.dump(model, MODEL_FILENAME)
-    print("✅ Done! The model is now updated and ready for deployment.")
 
 if __name__ == "__main__":
     run_pipeline()
