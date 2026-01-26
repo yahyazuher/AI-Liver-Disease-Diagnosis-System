@@ -85,17 +85,25 @@ graph TD
 ```
 ---
 
+### **Performance & Technical Reference**
+
+For a deeper dive into the model evaluation metrics and architectural logic, please refer to the following resources:
 
 
-# Gate Model Testing & Validation
+* **Visual Analysis (Confusion Matrices):** To view the performance visualizations and confusion matrices for all models, visit the main analysis notebook: **[notebooks/AI_Liver_Disease_Diagnosis_System.ipynb](https://github.com/yahyazuher/AI-Liver-Disease-Diagnosis-System/blob/main/notebooks/AI_Liver_Diseases_Diagnosis_System.ipynb)**
+* **Technical Documentation:** For detailed information on XGBoost hyperparameters, vector logic, and training methodologies, refer to: **[docs/XGBoost.md](./XGBoost.md)**
+
+---
+
+## **Testing Gate Model**  
 
 To ensure the reliability of the **Gate Model** as the primary screening layer, it was subjected to a rigorous "Stress Test" using 10 synthetic medical cases designed to mimic real-world scenarios. These cases range from clearly healthy individuals to critical patients, including complex "borderline" cases to test the model's sensitivity.
 
-## 1. Test Data Overview
+### 1. Test Data Overview
 The testing dataset consists of **10 distinct profiles** with varying biochemical markers.
 * test_gate_model.py inside `notebooks/code/`, ore [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 
-### Cases Medical Analysis of The 10 Cases
+#### Cases Medical Analysis of The 10 Cases
 
 | Case ID | Condition | Key Medical Indicators (Why?) |
 | :---: | :--- | :--- |
@@ -114,7 +122,7 @@ The testing dataset consists of **10 distinct profiles** with varying biochemica
 
 ---
 
-## 2. Model Predictions & Output Analysis
+### 2. Model Predictions & Output Analysis
 
 The following table shows the actual raw output from the model (`0=Sick` or `1=Healthy`) and the interpretation.
 
