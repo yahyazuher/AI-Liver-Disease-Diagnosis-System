@@ -8,16 +8,17 @@ An integrated AI ecosystem designed to assess liver health through a pipeline of
 > It does **not** replace professional medical diagnosis.
 
 ---
-##  Repository Structure
 
-| Directory | Description |
-|-----------|-------------|
-| `models/` | Serialized models organized by disease type (Fatty Liver, Fibrosis, Donor, Cancer). |
-| `docs/` | Detailed documentation on methodology, medical logic, and ethical standards. |
-| `data/` | Contains dataset placeholders. **Note:** Raw medical data is not included for privacy/ethical reasons. |
-| `code/` | Training and testing scripts (`.py`). **Fully optimized and ready for immediate execution on Google Colab.** |
+| Directory / File | Description |
+| --- | --- |
+| **`notebooks/`** | The core functional hub. It contains the **Main `.ipynb` file**, which integrates the entire diagnostic pipeline—from data processing to final prediction. |
+| **`models/`** | Contains the finalized **`.pkl`** serialized models (Fatty Liver, Fibrosis, Cancer, etc.), ready for instant deployment. |
+| **`docs/`** | **Detailed documentation** regarding medical logic, ethical guidelines, and the **`XGBoost.md`** file for technical deep-dives. |
+| **`data/`** | The storage hub for the **`.csv `,`.pxt`** processed and raw datasets. |
+| **`notebooks/code/`** | A dedicated sub-directory for **modular `.py` scripts**. Source Code for the project's backend logic |
 
 ---
+
 ### Project Overview
 
 This project presents a **multi-model AI system** designed to assess liver health. The system works as follows:
@@ -117,8 +118,8 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 > **Note:**
 > For the exact mathematical implementations of derived features (such as APRI and ALBI scores) and the complete training pipeline, please refer to the source code:
-> * **Training Logic:** `code/train_HC_models.py` (Contains feature engineering & model serialization).
-> * **Testing & Validation:** `code/test_HC_models.py` (Contains the inference engine and the 7-case validation suite).
+> * **Training Logic:** `notebooks/code/train_HC_models.py` (Contains feature engineering & model serialization).
+> * **Testing & Validation:** `notebooks/code/test_HC_models.py` (Contains the inference engine and the 7-case validation suite).
 
 **For comprehensive technical details, performance metrics, and clinical validation analysis, please refer to:** ➔ `docs/HepatitisC_Models.md`
 
