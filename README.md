@@ -52,14 +52,14 @@ This project presents a **multi-model AI system** designed to assess liver healt
 
 The Gate Model serves as the **first line of defense** in the system, performing binary classification to separate healthy users from potential liver patients. It relies on an **XGBoost-trained model** (`gate_model.pkl`) that interprets biochemical input values using learned weights from a rigorously cleaned dataset, ensuring resource-efficient pre-screening before activating complex sub-models.
 
-**(Trained Model):** `gate_model.pkl`
+**(Trained Model):** [gate_model.pkl](./models/gate_model.pkl)
 
 **Core Logic:** Evaluates user biochemical profiles and identifies potential risk patterns to filter cases needing further analysis.
 
 **Critical Requirement (Positional Logic):** Inputs must follow the exact order used in training:
 `['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'ALP', 'ALT', 'AST', 'Total_Protiens', 'Albumin', 'Albumin_and_Globulin_Ratio']`
 
-For more information on dataset preparation, model training, and testing methodology, please visit: ➔ `docs/Gate_Model.md`
+For more information on dataset preparation, model training, and testing methodology, please visit: ➔ [docs/Gate_Model.md](./docs/Gate_Model.md)
 
 <p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
@@ -68,13 +68,13 @@ Non-Alcoholic Fatty Liver Disease Diagnosis Model
 
 This model analyzes the interplay between triglyceride levels and liver enzymes to identify inflammatory lipid accumulation. The system features a safety Veto protocol based on "Platelet counts" for the early detection of liver fibrosis markers associated with fatty liver.
 
-(Trained Model): fatty_liver_model.pkl
+(Trained Model): [fatty_liver_model.pkl](./models/fatty_liver_model.pkl)
 
 Core Logic: Connects the "Raw Material" (Triglycerides) with the "Alarm Signal" (ALT/GGT) to distinguish NAFLD from viral hepatitis.
 
 Critical Requirement (Positional Logic): The model processes data as an ordered mathematical matrix; therefore, inputs must be entered in the exact following order: `['Albumin', 'ALP', 'AST', 'ALT', 'Cholesterol', 'Creatinine', 'Glucose', 'GGT', 'Bilirubin', 'Triglycerides', 'Uric_Acid', 'Platelets', 'HDL']`.
 
-For detailed technical and medical information: regarding NHANES Data Integration, cleaning strategies, and clinical scenario analysis, please visit: ➔ `docs/FattyLiver_Model.md`
+For detailed technical and medical information: regarding NHANES Data Integration, cleaning strategies, and clinical scenario analysis, please visit: ➔  [docs/FattyLiver_Model.md](./docs/FattyLiver_Model.md) 
 
 <p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
@@ -82,7 +82,7 @@ For detailed technical and medical information: regarding NHANES Data Integratio
 
 This ensemble framework assesses liver fibrosis progression and calculates survival risk for **Hepatitis C (HCV)** patients. It integrates structural liver damage with functional outcomes using weighted **XGBoost** architectures to provide a multi-dimensional health assessment.
 
-**(Trained Models):** `hepatitisC_stage_model.pkl`, `hepatitisC_complications.pkl`, `hepatitisC_status_model.pkl` (all in `models/` directory).
+**(Trained Models):** [hepatitisC_stage_model.pkl](./models/hepatitisC_stage_model.pkl) , [hepatitisC_complications.pkl](./models/hepatitisC_complications.pkl), [hepatitisC_status_model.pkl](./models/hepatitisC_status_model.pkl) (all in `models/` directory).
 
 The framework employs a **hierarchical decision-making process** where the predicted histological stage acts as a high-weight input for the final survival probability. This mirrors clinical reality: physical scarring (detected by the Stage model) is a primary driver of functional failure and mortality risk.
 
@@ -92,7 +92,7 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 #### **A. Complications Prediction Model**
 
-* **Target File:** `models/hepatitisC_complications.pkl`
+* **Target File:** [hepatitisC_complications.pkl](./models/hepatitisC_complications.pkl)
 * **Clinical Goal:** Predicts risk of Ascites (Fluid Retention).
 * **Performance:** **95.24% Accuracy**.
 * **Input Dimension:** 14 Features.
@@ -101,7 +101,7 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 #### **B. Stage Prediction Model (Structural)**
 
-* **Target File:** `models/hepatitisC_stage_model.pkl`
+* **Target File:** [hepatitisC_stage_model.pkl](./models/hepatitisC_stage_model.pkl)
 * **Clinical Goal:** Classifies Histological Fibrosis Stage (1, 2, or 3).
 * **Input Dimension:** 19 Features (Includes calculated indices).
 * **Required Feature Order:**
@@ -109,7 +109,7 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 #### **C. Status Prediction Model (Prognostic)**
 
-* **Target File:** `models/hepatitisC_status_model.pkl`
+* **Target File:** [hepatitisC_status_model.pkl](./models/hepatitisC_status_model.pkl)
 * **Clinical Goal:** Calculates Mortality Risk Probability.
 * **Input Dimension:** 18 Features (Includes ALBI Score).
 * **Required Feature Order:**
@@ -121,7 +121,7 @@ The system relies on three specialized models, each requiring a strict mathemati
 > * **Training Logic:** `notebooks/code/train_HC_models.py` (Contains feature engineering & model serialization).
 > * **Testing & Validation:** `notebooks/code/test_HC_models.py` (Contains the inference engine and the 7-case validation suite).
 
-**For comprehensive technical details, performance metrics, and clinical validation analysis, please refer to:** ➔ `docs/HepatitisC_Models.md`
+**For comprehensive technical details, performance metrics, and clinical validation analysis, please refer to:** ➔ [docs/HepatitisC_Models.md](./docs/HepatitisC_Models.md)
 
 <p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
@@ -129,13 +129,13 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 This model evaluates the probability of developing Hepatocellular Carcinoma (HCC) by analyzing the complex interplay between genetic predisposition and environmental triggers. It utilizes XGBoost weights to determine the impact of each analytical factor.
 
-(Trained Model): cancer_model.pkl
+(Trained Model): [cancer_model.pkl](./models/cancer_model.pkl)
 
 Core Logic: The model demonstrates that a healthy lifestyle can effectively "neutralize" genetic predisposition; hereditary risk remains a "potential" rather than an "inevitable fate" without environmental catalysts (e.g., smoking and alcohol).
 
 Critical Requirement (Positional Logic): The model processes data as an ordered mathematical matrix; therefore, inputs must be entered in the exact following order: `['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']`.
 
-For detailed technical and medical information: regarding feature importance analysis, virtual clinic scenarios, and preventive prediction logic, please visit: ➔ `docs/Cancer_Risk_Model.md`
+For detailed technical and medical information: regarding feature importance analysis, virtual clinic scenarios, and preventive prediction logic, please visit: ➔ [docs/Cancer_Risk_Model.md](./docs/Cancer_Risk_Model.md)
 
 <p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
