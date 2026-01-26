@@ -129,8 +129,6 @@ Each of the six models within the ecosystem Went through a rigorous feature sele
 1.  By removing these columns, the XGBoost engine is forced to discover the genuine mathematical relationships between biomarkers (such as **Albumin** and **Bilirubin**) and medical outcomes, rather than relying on a direct answer provided within the data.
 2. If identifiers are left in, the model might associate a specific row or metadata with a disease. This causes **Data Leakage**—similar to giving a student the answer in the margin of an exam. While this leads to 100% training accuracy, it causes total failure with new patients. forcing the models to analyze **Raw Blood Chemistry** instead of memorizing previous diagnoses.
 
----
-
 ### **Why Is This Dangerous?**
 
 1. **False Confidence:** You may believe you have developed a revolutionary model due to high accuracy scores.
@@ -151,7 +149,7 @@ Instead of manual oversampling, we implemented a dynamic class-weighting mechani
 
  By assigning a higher weight to the minority class (the patients), the **XGBoost** algorithm becomes hyper-sensitive to positive cases. It forces the loss function to penalize the misclassification of a **sick** patient more heavily than a **healthy** one, ensuring the model is clinically reliable.
 
-* **Implementation:** This logic is fully automated in `code/train_gate_model.py` and demonstrated in this [Google Colab Notebook](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ).
+This logic is fully automated in `notebooks/code/train_gate_model.py` and demonstrated in  [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 
 ---
 #### 2- Cancer Risk Model
@@ -188,7 +186,7 @@ param_grid = {
 Since we apply **5-fold Cross-Validation** (`cv=5`), each combination is trained 5 times on different data subsets. 
 **Total Training Iterations** = $54 \times 5 = 270$ individual fits.
 
-> To see more about Automated Hyperparameter Tuning strategy : [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=TCOPEuAyyDg-)
+> To see more about Automated Hyperparameter Tuning strategy ,Go to notebook/AI_Liver_Diseases_Diagnosis_System.ipynb ,Or [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=TCOPEuAyyDg-)
 
 <p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
