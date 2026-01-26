@@ -1,4 +1,4 @@
-# Hepatitis C (HCV) Diagnostic & Prognostic Framework 
+# Hepatitis C (HCV)
 
 
 This specialized framework is dedicated to evaluating the progression of Liver Fibrosis in Hepatitis C patients and predicting the probability of critical complications, such as Ascites, and overall mortality. The system utilizes an ensemble of XGBoost models, with its core logic distributed across three specialized serialized files: `hepatitisC_stage_model.pkl`, `hepatitisC_complications.pkl`, and `hepatitiC_status_model.pkl`(all in models/ directory). By analyzing clinical input values through optimized "feature weights," the framework provides a precise determination of the risk levels associated with key biomarkers.
