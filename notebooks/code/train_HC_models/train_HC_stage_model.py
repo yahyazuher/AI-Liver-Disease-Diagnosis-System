@@ -19,6 +19,8 @@ Description: Trains an XGBoost classifier to predict liver disease stages (1, 2,
 
 """
 
+
+
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -30,11 +32,14 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import joblib
 import os
 import sys
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # --- Configuration ---
 DATASET_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/hepatitisC_Stage.csv'
 LOCAL_FILENAME = 'hepatitisC_Stage.csv'
 MODEL_FILENAME = 'hepatitisC_stage_model.pkl'
+CONFUSION_MATRIX_FILENAME = 'confusion_matrix_stage.png'
 
 COLUMN_NAMES = [
     'Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos',
@@ -68,7 +73,7 @@ def add_medical_features(df):
     return df_eng
 
 def train():
-    print("🚀 Starting Training Pipeline...")
+    print("Starting Training Pipeline...")
 
     # 1. Load & Engineer Features
     df = get_dataset()
@@ -79,6 +84,7 @@ def train():
     y = df['Stage']
 
     # Map Targets: 1->0 (Early), 2->1 (Fibrosis), 3->2 (Cirrhosis)
+    # This is necessary because XGBoost expects classes starting from 0
     y = pd.to_numeric(y, errors='coerce').fillna(0).astype(int)
     y = y.map({1: 0, 2: 1, 3: 2}).astype(int)
 
@@ -102,8 +108,8 @@ def train():
             gamma=0.1,
             subsample=0.7,
             colsample_bytree=0.8,
-            objective='multi:softprob',
-            num_class=3,
+            objective='multi:softprob', # Multi-class classification
+            num_class=3,                # 3 specific classes (Stage 1, 2, 3)
             eval_metric='mlogloss',
             n_jobs=-1,
             random_state=42
@@ -113,19 +119,47 @@ def train():
     # 5. Train & Evaluate
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-    print("⚙️ Training model...")
+    print("Training model...")
     model.fit(X_train, y_train)
 
-    print("\n📈 Evaluation Results:")
+    print("\nEvaluation Results:")
     y_pred = model.predict(X_test)
-    print(f"🎯 Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+    print(f" Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
     print(classification_report(y_test, y_pred, target_names=['Stage 1', 'Stage 2', 'Stage 3']))
 
+    # ================================================================
+    # SECTION: CONFUSION MATRIX VISUALIZATION (MULTI-CLASS)
+    # ================================================================
+    # This matrix visualizes the classification accuracy across three distinct
+    # histological stages (1, 2, and 3). 
+    # Diagonal elements represent correct classifications.
+    # Off-diagonal elements represent 'Confusion' (e.g., misclassifying Stage 2 as Stage 1).
+    # ================================================================
+    
+    cm = confusion_matrix(y_test, y_pred)
+    
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=True,
+                xticklabels=['Stage 1', 'Stage 2', 'Stage 3'],
+                yticklabels=['Stage 1', 'Stage 2', 'Stage 3'])
+    
+    plt.title('Confusion Matrix: Fibrosis Stage Prediction', fontsize=14, pad=20)
+    plt.ylabel('Actual Histological Stage', fontsize=12)
+    plt.xlabel('Model Prediction', fontsize=12)
+    
+    print(f" Saving confusion matrix to {CONFUSION_MATRIX_FILENAME}...")
+    plt.savefig(CONFUSION_MATRIX_FILENAME, dpi=300, bbox_inches='tight')
+    plt.show()
+    
+    # ================================================================
+    # END VISUALIZATION
+    # ================================================================
+
     # 6. Save Final Model
-    print("💾 Retraining on full data and saving...")
+    print("Retraining on full data and saving...")
     model.fit(X, y)
     joblib.dump(model, MODEL_FILENAME)
-    print(f"✅ Saved: {MODEL_FILENAME}")
+    print(f"Saved: {MODEL_FILENAME}")
 
 if __name__ == "__main__":
     train()
