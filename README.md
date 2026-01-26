@@ -15,7 +15,7 @@ An integrated AI ecosystem designed to assess liver health through a pipeline of
 | **[`models/`](./models/)** | Contains the finalized **`.pkl`** serialized models (Fatty Liver, Fibrosis, Cancer, etc.), ready for instant deployment. |
 | **[`docs/`](./docs/)** | **Detailed documentation** regarding medical logic, ethical guidelines, and the **`XGBoost.md`** file for technical deep-dives. |
 | **[`data/`](./data/)** | The storage hub for the **`.csv `,`.pxt`** processed and raw datasets. |
-| **`notebooks/code/`** | A dedicated sub-directory for **modular `.py` scripts**. Source Code for the project's backend logic |
+| **[`notebooks/code/`](./notebooks/code/)** | A dedicated sub-directory for **modular `.py` scripts**. Source Code for the project's backend logic |
 
 ---
 
@@ -41,10 +41,10 @@ This project presents a **multi-model AI system** designed to assess liver healt
 ## Implemented Models
 | # | Model | Training Data | Original Training Data | Original Data Source |
 |:-:|:---|:---|:---|:---:|
-| 1 | Gate&nbsp;Model[`Gate&nbsp;Model`](./) | `data/processed/Liver_Patient_Dataset_Cleaned_19k.csv` | `data/raw/Liver Patient Dataset (LPD)_train.csv` | [Dataset](https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset) |
-| 1 | Fatty&nbsp;Liver&nbsp;Model | `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) |
-| 3 |     HepatitisC&nbsp;Models <br> 3 Specialized Models | `data/processed/HepatitisC_Stage_model.csv` `data/processed/HepatitisC_status_model.csv` `data/processed/HepatitisC_complications.csv` | `data/raw/cirrhosis.csv` `data/processed/master8323pationt.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
-| 4 | Cancer&nbsp;Model | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) |
+| 1 | [Gate Model](./docs/Gate_Model.md) | `data/processed/Liver_Patient_Dataset_Cleaned_19k.csv` | `data/raw/Liver Patient Dataset (LPD)_train.csv` | [Dataset](https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset) |
+| 2 | [Fatty Liver Model](./docs/FattyLiver_Model.md)| `data/processed/FattyLiver.csv` | `data/raw/BIOPRO_H.xpt` `CBC_H.xpt` `HDL_H.xpt`  | [Dataset](https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Laboratory&CycleBeginYear=2013) |
+| 3 |    [HepatitisC&nbsp;Models <br> 3 Specialized Models](./docs/HepatitisC_Models.md) | `data/processed/HepatitisC_Stage_model.csv` `data/processed/HepatitisC_status_model.csv` `data/processed/HepatitisC_complications.csv` | `data/raw/cirrhosis.csv` `data/processed/master8323pationt.csv` | [Dataset](https://www.kaggle.com/datasets/fedesoriano/cirrhosis-prediction-dataset) |
+| 4 | [Cancer Model](./docs/Cancer_Risk_Model.md) | `data/processed/The_Cancer_data_1500.csv` | `data/raw/The_Cancer_data_1500_V2.csv` | [Dataset](https://www.kaggle.com/datasets/rabieelkharoua/cancer-prediction-dataset) |
 
 <p align="center"> <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="1000"> </p>
 
