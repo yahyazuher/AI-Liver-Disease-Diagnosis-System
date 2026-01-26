@@ -199,5 +199,6 @@ The model shows high precision in **Case 7**, where the patient only slightly ex
 
 ---
 
-The validation of these **7 scenarios** confirms that the model is not simply looking at high numbers in isolation. Instead, it is performing a complex **Biochemical Correlation**. It effectively prevents over-diagnosis in cases of isolated high fats and maintains high specificity by identifying non-fat-related liver injuries as non-NAFLD.  
+The validation of these **7 scenarios** confirms that the model is not simply looking at high numbers in isolation. Instead, it is performing a complex **Biochemical Correlation**. It effectively prevents over-diagnosis in cases of isolated high fats and maintains high specificity by identifying non-fat-related liver injuries as non-NAFLD.  Visit `notebooks/` or [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=7XzfWokVGCQb)
+
 
