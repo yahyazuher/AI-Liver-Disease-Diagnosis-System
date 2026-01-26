@@ -58,7 +58,7 @@ The dataset was reduced by over **50%** to eliminate statistical noise and preve
 ---
 
 
-### Positional Logic:
+## Positional Logic:
 
 The `FattyLiver_Model.pkl` file is a **Mathematical Matrix**. It does not interpret column headers; instead, it relies strictly on **Positional Indices** (the order of data).
 
@@ -67,6 +67,17 @@ Feeding data in the wrong sequence (e.g., placing Glucose in the Triglycerides s
 ['Albumin', 'ALP', 'AST', 'ALT', 'Cholesterol', 'Creatinine', 'Glucose', 'GGT', 'Bilirubin', 'Triglycerides', 'Uric_Acid', 'Platelets', 'HDL']
 
 ---
+
+### **Performance & Technical Reference**
+
+For a deeper dive into the model evaluation metrics and architectural logic, please refer to the following resources:
+
+
+* **Visual Analysis (Confusion Matrices):** To view the performance visualizations and confusion matrices for all models, visit the main analysis notebook: **[notebooks/AI_Liver_Disease_Diagnosis_System.ipynb](https://github.com/yahyazuher/AI-Liver-Disease-Diagnosis-System/blob/main/notebooks/AI_Liver_Diseases_Diagnosis_System.ipynb)**
+* **Technical Documentation:** For detailed information on XGBoost hyperparameters, vector logic, and training methodologies, refer to: **[docs/XGBoost.md](./XGBoost.md)**
+
+---
+
 ## **Model Optimization and Diagnostic Logic**
 
 
