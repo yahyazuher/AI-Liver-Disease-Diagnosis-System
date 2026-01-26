@@ -22,24 +22,22 @@ Imagine a student who memorizes previous exam questions word-for-word rather tha
 
 To ensure our XGBoost model remains a smart learner, we implemented the following constraints:
 
-1. Tree Depth (max_depth=4): This constraint prevents the model from growing overly complex trees that might capture "noise" or specific outliers in the training data, ensuring that the model focuses on broader, more significant clinical patterns. This is **illustrated** by the maximum depth of four shown in the **Architecture & Logic Schematics (1)** at the end of the page.
+1. Tree Depth (max_depth=4): This constraint prevents the model from growing overly complex trees that might capture "noise" or specific outliers in the training data, ensuring that the model focuses on broader, more significant clinical patterns. *This is **illustrated** by the maximum depth of four shown in the **Architecture & Logic Schematics (1)** at the end of the page*.
 
-2. Stochastic Data Sampling (subsample=0.8): During training, the model only sees a random 80% of the dataset for each tree. This variation forces the model to find robust patterns that work for the entire dataset, rather than just memorizing a specific group of patient records. This process is illustrated in the **Architecture & Logic Schematics (2)** at the end of the page, which shows the internal 80/20 split used during the learning process.
+2. Stochastic Data Sampling (subsample=0.8): During training, the model only sees a random 80% of the dataset for each tree. This variation forces the model to find robust patterns that work for the entire dataset, rather than just memorizing a specific group of patient records. *This process is illustrated in the **Architecture & Logic Schematics (2)** at the end of the page, which shows the internal 80/20 split used during the learning process*.
 
 3. In XGBoost, we don’t just build a single tree; we build hundreds of trees that learn from each other's mistakes. To ensure these trees don’t ask stupid questions , we use Regularization:
    
-   * The Foundation – **Weights** :Before we discuss how to tune the model, we must understand what we are actually tuning. In XGBoost, weights are the "numerical language" the model uses to express the importance of information. Weight is a numerical value assigned to each "leaf" (the final decision point) in the decision tree. Think of the weight as a "measure of importance" if a specific feature like "high blood sugar" leads to a critical decision, the model assigns it a high weight. If left unchecked, the model will create massive, overly complex weights to satisfy every outlier in the data, leading to Overfitting.
+   * The Foundation – **Weights** :Before we discuss how to tune the model, we must understand what we are actually tuning. In XGBoost, weights are the numerical language the model uses to express the importance of information. Weight is a numerical value assigned to each "leaf" (the final decision point) in the decision tree. Think of the weight as a "measure of importance" if a specific feature like "high blood sugar" leads to a critical decision, the model assigns it a high weight. If left unchecked, the model will create massive, overly complex weights to satisfy every outlier in the data, leading to Overfitting.
      
    * To prevent the model from becoming too complex, we introduce a **Penalty**. Imagine the model has to pay a tax for every question it asks or every weight it uses within the trees. The rule is simple: if a question (e.g., checking blood pressure) reduces the error significantly, the benefit covers the tax and the model keeps the question. However, if a question is trivial or overly specific, the tax will outweigh the benefit, forcing the model to simplify itself.
      
    * The first type of penalty is **L1**, and its primary job is to achieve Sparsity. It acts like a pair of "sharp scissors" monitoring the weights; if it finds weights for weak or irrelevant features, it aggressively shrinks them until they reach zero. If you have 100 biomarkers and the model finds that 80 of them are just noise with no real impact on the diagnosis, L1 will eliminate them entirely. *This forces the model to focus only on the elite symptoms*, making it easier to interpret and more accurate for new patients.
+     > The L1 calculation specifically relies on a geometry known as **Manhattan Distance**, it is named this because it measures distance akin to walking along the grid-like streets of a city ,rather than taking a direct straight line.
      
    * The second type is **L2**, and its goal is to prevent extremism. Unlike L1, this type doesn’t delete features entirely, instead, it monitors the square of the weights and ensures they remain small and distributed. It prevents a dictatorship in diagnosis—it won't allow a single feature (like body temperature) to dominate the decision while ignoring everything else. Instead, it forces the model to consider all indicators (diabetes, age, weight ,e.t.c) together with reasonable proportions. *This protects from errors caused by over-relying on a single factor*.
+     > L2 calculations specifically rely on **Euclidean Distance**,the traditional measurement of a direct straight line between two points (the shortest path). This geometric approach results in a smoother and more balanced distribution of weights, in contrast to the sharp angles found in L1.
 
-
-
-3. **Data Sampling (`subsample=0.8`):** The model trains on different subsets of the data, forcing it to find robust patterns that exist across the entire dataset.
-4. The model applies L1 and L2 regularization to penalize over-complex trees and ensure better generalization.
 
 <div align="center">
   <hr style="width: 100%; border: none; height: 0.4px; background-color: rgba(255, 255, 255, 0.3);">
