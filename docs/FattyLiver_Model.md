@@ -158,11 +158,7 @@ The model mimics a clinical consultant by evaluating the **synergy** between lip
 *The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
 
 ---
-I apologize for the confusion. I will strictly follow the **7 clinical scenarios** provided in your table.
 
-Here is the professional English report for the **AiLDS: Fatty Liver Validation** based exactly on those 7 cases.
-
----
 
 ## Clinical Validation: 7-Case Stress Test
 
@@ -203,5 +199,5 @@ The model shows high precision in **Case 7**, where the patient only slightly ex
 
 ---
 
-The validation of these **7 scenarios** confirms that the model is not simply looking at high numbers in isolation. Instead, it is performing a complex **Biochemical Correlation**. It effectively prevents over-diagnosis in cases of isolated high fats and maintains high specificity by identifying non-fat-related liver injuries as non-NAFLD.
+The validation of these **7 scenarios** confirms that the model is not simply looking at high numbers in isolation. Instead, it is performing a complex **Biochemical Correlation**. It effectively prevents over-diagnosis in cases of isolated high fats and maintains high specificity by identifying non-fat-related liver injuries as non-NAFLD.  
 
