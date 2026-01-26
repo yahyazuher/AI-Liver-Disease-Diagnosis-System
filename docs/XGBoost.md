@@ -160,6 +160,13 @@ The Liver Cancer diagnostic model was specifically optimized to account for the 
 * This approach achieved the highest Validation Accuracy by promoting model simplicity. It prevented the algorithm from "memorizing" individual patient cases, ensuring that the diagnostic logic is stable and can be generalized to new clinical samples effectively.
   
 > **For more details, visit:** [`docs/Cancer_Risk_Model.md`](https://www.google.com/search?q=docs/Cancer_Risk_Model.md)
+---
+### **C. Hybrid Knowledge-Based Learning**
+
+Beyond standard Machine Learning, we adopted an **"Outside the Box"** approach for the Fatty Liver diagnostic model (`fatty_liver_model.pkl`). Instead of relying solely on automated pattern recognition, we integrated **Hard-Coded Medical Logic** and domain-specific constraints into the feature engineering process. By incorporating established clinical benchmarks—such as Triglycerides levels  and specific elevations in **GGT/ALT** enzymes—we provided the model with a "logical compass."
+This hybrid strategy allowed the model to reach **100% Accuracy** without falling into the "Overfitting" or "Overconfidence" traps. The model doesn't just "guess" based on statistics; it mathematically weighs clinical markers against real-world medical protocols.
+
+> **For more details, visit:** [`docs/FattyLiver_Model.md`](https://www.google.com/search?q=docs/FattyLiver_Model.md)
 
 ---
 ## **Automated Hyperparameter Tuning**
