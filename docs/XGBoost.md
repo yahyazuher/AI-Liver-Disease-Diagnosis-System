@@ -24,9 +24,9 @@ To ensure our XGBoost model remains a smart learner, we implemented the followin
 
 1. Tree Depth (max_depth=4): This constraint prevents the model from growing overly complex trees that might capture "noise" or specific outliers in the training data, ensuring that the model focuses on broader, more significant clinical patterns. *This is **illustrated** by the maximum depth of four shown in the **Architecture & Logic Schematics (1)** at the end of the page*.
 
-2. Stochastic Data Sampling (subsample=0.8): During training, the model only sees a random 80% of the dataset for each tree. This variation forces the model to find robust patterns that work for the entire dataset, rather than just memorizing a specific group of patient records .By doing so, we prioritize True **Accuracy** on new unseen patients over misleadingly high scores on training data. *This process is illustrated in the **Architecture & Logic Schematics (2)** at the end of the page, which shows the internal 80/20 split used during the learning process*.
+2. Stochastic Data Sampling (subsample=0.8): During training, the model only sees a random 80% of the dataset for each tree. This variation forces the model to find robust patterns that work for the entire dataset, rather than just memorizing a specific group of patient records .By doing so, we prioritize True **Accuracy** on new unseen patients over misleadingly high scores on training data .*This process is illustrated in the **Architecture & Logic Schematics (2)** at the end of the page, which shows the internal 80/20 split used during the learning process*.
 
-3. In XGBoost, we don’t just build a single tree; we build hundreds of trees that learn from each other's mistakes. To ensure these trees don’t ask stupid questions , we use Regularization:
+3. In XGBoost, we don’t just build a single tree; we build hundreds of trees that learn from each other's mistakes. To ensure these trees don’t ask stupid questions , we use **Regularization**:
    
    * The Foundation – **Weights** :Before we discuss how to tune the model, we must understand what we are actually tuning. In XGBoost, weights are the numerical language the model uses to express the importance of information. Weight is a numerical value assigned to each "leaf" (the final decision point) in the decision tree. Think of the weight as a "measure of importance" if a specific feature like "high blood sugar" leads to a critical decision, the model assigns it a high weight. If left unchecked, the model will create massive, overly complex weights to satisfy every outlier in the data, leading to Overfitting.
     
@@ -48,34 +48,24 @@ By combining L1 and L2, we ensure the model maintains High Accuracy without fall
 
 
 ## **Internal Mechanisms**
-Detailed breakdown of the internal mechanisms that make XGBoost superior for this medical diagnostic project:
-
-### **1. Regularization**
-Prevents overfitting, unlike standard Gradient Boosting, which focuses solely on minimizing the error (Loss Function), XGBoost optimizes an objective function that includes a **regularization term**.
-
-$$Obj(\Theta) = L(\Theta) + \Omega(\Theta)$$
+Breakdown of the internal mechanisms that make XGBoost superior for this medical diagnostic project:
 
 
-
-* **$$L(\Theta)$$ (Loss):** Measures how well the model fits the training data.
-* **$$Omega(\Theta)$$ (Regularization):** Measures the complexity of the trees.
-It applies **L1 (Lasso)** and **L2 (Ridge)** regularization. In simple terms, this "penalizes" the model if the trees become too complex or rely too heavily on specific features. This is critical in our medical dataset to ensure the diagnosis logic applies to *new* patients, not just the training group.
-
-### **2. Sparsity Awareness**
+### **1. Sparsity Awareness**
 
 Medical data often contains missing values (e.g., a patient didn't take a specific lab test).
 
 * XGBoost treats "missing values" as information, not errors. During training, the algorithm learns a **"Default Direction"** for each node in the tree.
 * If a future patient has a missing value for a specific test, the model automatically sends them down the "default path" that was statistically determined to minimize error during training. This removes the need for complex imputation techniques (like filling with averages) which can sometimes introduce noise.
 
-### **3. Parallel Processing**
+### **2. Parallel Processing**
 
 While Boosting is inherently sequential (Tree 2 must wait for Tree 1), XGBoost achieves speed through **Parallel Feature Splitting**.
 
 * The most time-consuming part of building a tree is sorting data to find the best "split point." XGBoost stores the data in compressed, pre-sorted columns (Block Structure).
 * This allows the algorithm to use multiple CPU cores to search for the best split points simultaneously. This makes training significantly faster than traditional methods like sklearn's GBM.
 
-### **4. Tree Pruning**
+### **3. Tree Pruning**
 
 Traditional algorithms use a "greedy" approach, stopping the tree growth as soon as a split yields negative gain. This can be problematic if a "bad" split leads to a "very good" split later on.
 
