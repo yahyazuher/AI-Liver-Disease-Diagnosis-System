@@ -35,7 +35,7 @@ This section is dedicated to evaluating the probability of developing Hepatocell
 
 
 
-The system's efficiency depends on a data split of **80% for training** and **20% for testing**, which resulted in a final predictive accuracy of 94%.
+The system's efficiency depends on a data split of 80% for training and 20% for testing, which resulted in a final predictive accuracy of 94%. The model was trained on the 'Diagnosis' column within the training dataset—which categorizes the patient's status as either 'Sick' or 'Healthy'. This target variable was used to validate the model's performance, ensuring it identifies patterns accurately rather than simply memorizing data through a process known as Supervised Learning.
 
 
 
