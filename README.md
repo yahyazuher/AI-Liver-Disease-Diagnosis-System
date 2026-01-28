@@ -80,7 +80,7 @@ This model analyzes the interplay between triglyceride levels and liver enzymes 
 
 * **Core Logic:** Connects the "Raw Material" (Triglycerides) with the "Alarm Signal" (ALT/GGT) to distinguish NAFLD from viral hepatitis.
 * **Performance:** **100.00% Accuracy**, since its more a program than a smart system.
-* * **Required Feature Order:**  `['Albumin', 'ALP', 'AST', 'ALT', 'Cholesterol', 'Creatinine', 'Glucose', 'GGT', 'Bilirubin', 'Triglycerides', 'Uric_Acid', 'Platelets', 'HDL']`.
+* **Required Feature Order:**  `['Albumin', 'ALP', 'AST', 'ALT', 'Cholesterol', 'Creatinine', 'Glucose', 'GGT', 'Bilirubin', 'Triglycerides', 'Uric_Acid', 'Platelets', 'HDL']`.
 
 For detailed technical and medical information: regarding NHANES Data Integration, cleaning strategies, and clinical scenario analysis, please visit: ➔  [docs/FattyLiver_Model.md](./docs/FattyLiver_Model.md) 
 
@@ -111,7 +111,7 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 * **Target File:** [hepatitisC_stage_model.pkl](./models/hepatitisC_stage_model.pkl)
 * **Clinical Goal:** Classifies Histological Fibrosis Stage (1, 2, or 3).
-* * **Performance:** **62.50% Accuracy**.
+* **Performance:** **62.50% Accuracy**.
 * **Input Dimension:** 19 Features (Includes calculated indices).
 * **Required Feature Order:**
 `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Status', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'Bilirubin_Albumin', 'Copper_Platelets']`
@@ -120,7 +120,7 @@ The system relies on three specialized models, each requiring a strict mathemati
 
 * **Target File:** [hepatitisC_status_model.pkl](./models/hepatitisC_status_model.pkl)
 * **Clinical Goal:** Calculates Mortality Risk Probability.
-* * **Performance:** **71.43% Accuracy**.
+* **Performance:** **71.43% Accuracy**.
 * **Input Dimension:** 18 Features (Includes ALBI Score).
 * **Required Feature Order:**
 `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'ALBI_Score', 'Bili_Alb_Ratio']`
@@ -141,7 +141,7 @@ This model evaluates the probability of developing Hepatocellular Carcinoma (HCC
 
 **Trained Model:** [cancer_model.pkl](./models/cancer_model.pkl)
 
-**Core Logic:** The model demonstrates that a healthy lifestyle can effectively "neutralize" genetic predisposition; hereditary risk remains a "potential" rather than an "inevitable fate" without environmental catalysts (e.g., smoking and alcohol).
+* **Core Logic:** The model demonstrates that a healthy lifestyle can effectively "neutralize" genetic predisposition; hereditary risk remains a "potential" rather than an "inevitable fate" without environmental catalysts (e.g., smoking and alcohol).
 * **Performance:** **94.00% Accuracy**.
 * **Required Feature Order:**  `['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']`.
 
