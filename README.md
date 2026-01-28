@@ -126,9 +126,10 @@ The system relies on three specialized models, each requiring a strict mathemati
 `['Bilirubin', 'Cholesterol', 'Albumin', 'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin', 'Age', 'Sex', 'Ascites', 'Hepatomegaly', 'Spiders', 'Edema', 'APRI', 'ALBI_Score', 'Bili_Alb_Ratio']`
 
 
-**Note:** For the exact mathematical implementations of derived features (such as APRI and ALBI scores) and the complete training pipeline, please refer to the source code:
-> * **Training Logic:** `notebooks/code/train_HC_models.py` (Contains feature engineering & model serialization).
-> * **Testing & Validation:** `notebooks/code/test_HC_models.py` (Contains the inference engine and the 7-case validation suite).
+For the exact mathematical derivations of features like APRI and ALBI scores, please refer to the Mathematical Appendix at the bottom of this page. To explore the full training pipeline, you can access the source code directly on :
+
+* **Training Logic:** `notebooks/code/train_HC_models.py` (Contains feature engineering & model serialization).
+* **Testing & Validation:** `notebooks/code/test_HC_models.py` (Contains the inference engine and the 7-case validation suite).
 
 **For comprehensive technical details, performance metrics, and clinical validation analysis, please refer to:** ➔ [docs/HepatitisC_Models.md](./docs/HepatitisC_Models.md)
 
