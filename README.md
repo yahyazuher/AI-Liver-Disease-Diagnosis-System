@@ -79,7 +79,7 @@ This model analyzes the interplay between triglyceride levels and liver enzymes 
 **Trained Model:** [fatty_liver_model.pkl](./models/fatty_liver_model.pkl)
 
 * **Core Logic:** Connects the "Raw Material" (Triglycerides) with the "Alarm Signal" (ALT/GGT) to distinguish NAFLD from viral hepatitis.
-* **Performance:** **100.00% Accuracy**, since its more a program than a smart system.
+* **Performance:** **100.00% Accuracy**. This is achieved through Deterministic Logic, as the component operates as a rule-based program rather than a probabilistic smart system. By utilizing fixed clinical thresholds, it provides a "Mathematical Ground Truth" that remains stable and 100% reproducible for every patient record.
 * **Required Feature Order:**  `['Albumin', 'ALP', 'AST', 'ALT', 'Cholesterol', 'Creatinine', 'Glucose', 'GGT', 'Bilirubin', 'Triglycerides', 'Uric_Acid', 'Platelets', 'HDL']`.
 
 For detailed technical and medical information: regarding NHANES Data Integration, cleaning strategies, and clinical scenario analysis, please visit: ➔  [docs/FattyLiver_Model.md](./docs/FattyLiver_Model.md) 
