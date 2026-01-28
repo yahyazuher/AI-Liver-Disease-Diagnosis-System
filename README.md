@@ -61,10 +61,11 @@ The Gate Model serves as the **first line of defense** in the system, performing
 
 **Trained Model:** [gate_model.pkl](./models/gate_model.pkl)
 
-**Core Logic:** Evaluates user biochemical profiles and identifies potential risk patterns to filter cases needing further analysis.
+* **Core Logic:** Evaluates user biochemical profiles and identifies potential risk patterns to filter cases needing further analysis.
 
-**Critical Requirement (Positional Logic):** Inputs must follow the exact order used in training:
-`['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'ALP', 'ALT', 'AST', 'Total_Protiens', 'Albumin', 'Albumin_and_Globulin_Ratio']`
+* **Performance:** **95.24% Accuracy**.
+* * **Required Feature Order:**  `['Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 'ALP', 'ALT', 'AST', 'Total_Protiens', 'Albumin', 'Albumin_and_Globulin_Ratio']`
+
 
 For more information on dataset preparation, model training, and testing methodology, please visit: ➔ [docs/Gate_Model.md](./docs/Gate_Model.md)
 
@@ -77,8 +78,8 @@ This model analyzes the interplay between triglyceride levels and liver enzymes 
 
 **Trained Model:** [fatty_liver_model.pkl](./models/fatty_liver_model.pkl)
 
-Core Logic: Connects the "Raw Material" (Triglycerides) with the "Alarm Signal" (ALT/GGT) to distinguish NAFLD from viral hepatitis.
-* **Performance:** **97.41% Accuracy**.
+* **Core Logic:** Connects the "Raw Material" (Triglycerides) with the "Alarm Signal" (ALT/GGT) to distinguish NAFLD from viral hepatitis.
+* **Performance:** **100.00% Accuracy**, since its more a program than a smart system.
 * * **Required Feature Order:**  `['Albumin', 'ALP', 'AST', 'ALT', 'Cholesterol', 'Creatinine', 'Glucose', 'GGT', 'Bilirubin', 'Triglycerides', 'Uric_Acid', 'Platelets', 'HDL']`.
 
 For detailed technical and medical information: regarding NHANES Data Integration, cleaning strategies, and clinical scenario analysis, please visit: ➔  [docs/FattyLiver_Model.md](./docs/FattyLiver_Model.md) 
@@ -140,11 +141,9 @@ This model evaluates the probability of developing Hepatocellular Carcinoma (HCC
 
 **Trained Model:** [cancer_model.pkl](./models/cancer_model.pkl)
 
-Core Logic: The model demonstrates that a healthy lifestyle can effectively "neutralize" genetic predisposition; hereditary risk remains a "potential" rather than an "inevitable fate" without environmental catalysts (e.g., smoking and alcohol).
-
+**Core Logic:** The model demonstrates that a healthy lifestyle can effectively "neutralize" genetic predisposition; hereditary risk remains a "potential" rather than an "inevitable fate" without environmental catalysts (e.g., smoking and alcohol).
 * **Performance:** **94.00% Accuracy**.
-
-Critical Requirement (Positional Logic): The model processes data as an ordered mathematical matrix; therefore, inputs must be entered in the exact following order: `['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']`.
+* * * **Required Feature Order:**  `['Age', 'Gender', 'BMI', 'Smoking', 'GeneticRisk', 'PhysicalActivity', 'AlcoholIntake', 'CancerHistory']`.
 
 For detailed technical and medical information: regarding feature importance analysis, virtual clinic scenarios, and preventive prediction logic, please visit: ➔ [docs/Cancer_Risk_Model.md](./docs/Cancer_Risk_Model.md)
 
