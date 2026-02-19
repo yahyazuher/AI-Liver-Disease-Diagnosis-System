@@ -74,7 +74,7 @@ This section details the rigorous data engineering strategies applied to ensure 
 ### **1.1. Mortality Prediction Model (Status Classification)**
 
 * Predict patient survival outcomes (**Deceased** vs. **Alive**).
-* **Initial Baseline:** Wen the preliminary model was trained on the full raw dataset, achieving an accuracy of **79.76%**. However, a data quality audit revealed that **105 records** contained missing values in critical biomarkers (*Triglycerides, SGOT, Alk_Phos, Copper, and Cholesterol*). The initial high accuracy was artificially inflated. The model was learning patterns from imputed or missing data structures rather than actual clinical pathology, leading to unreliable real-world predictions.
+* **Initial Baseline:** When the preliminary model was trained on the full raw dataset, achieving an accuracy of **79.76%**. However, a data quality audit revealed that **105 records** contained missing values in critical biomarkers (*Triglycerides, SGOT, Alk_Phos, Copper, and Cholesterol*). The initial high accuracy was artificially inflated. The model was learning patterns from imputed or missing data structures rather than actual clinical pathology, leading to unreliable real-world predictions.
 * **Refinement Strategy (Listwise Deletion):** To ensure the model trains on "Ground Truth" data only, all records with missing critical values were strictly removed.
 * **Final Dataset:** data/processed/hepatitisC_status.csv ,with 312 case (187 Stable/Alive vs. 125 Deceased).
 
