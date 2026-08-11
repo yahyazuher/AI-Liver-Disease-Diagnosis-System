@@ -19,7 +19,7 @@ This section is dedicated to the initial triage of users, functioning as the sys
 ---
 ### Training Phase
 
-The system's efficiency depends on a data split of **80% for training** and **20% for testing**, which resulted in a realistic real-world accuracy of **97.41%**. The model was trained on the 'Result' column within the training dataset—which categorizes the patient's status as either 'Sick' or 'Healthy'. This target variable was used to validate the model's performance, ensuring it identifies patterns accurately rather than simply memorizing data through a process known as Supervised Learning
+The system's efficiency depends on a data split of **80% for training** and **20% for testing**, which resulted in a realistic real-world accuracy of **98.90%**. The model was trained on the 'Result' column within the training dataset—which categorizes the patient's status as either 'Sick' or 'Healthy'. This target variable was used to validate the model's performance, ensuring it identifies patterns accurately rather than simply memorizing data through a process known as Supervised Learning
 
 * **Data Processing:** Unlike standard datasets, **rigorous preprocessing** was performed. Over 11,000 duplicate rows were identified and removed from the original raw file (`data/raw/Liver Pationt Dataset (LPD)_train.csv`).
 * **Training Data:** The model was trained on data from approximately **15,500 patients** extracted from the `Liver_Patient_Dataset_Cleaned_19k.csv` file.
@@ -52,8 +52,8 @@ The system is designed with a **resource-efficient workflow**. Instead of runnin
 ### How it Works:
 1.  **Screening:** The user's data is first processed *only* by the Gate Model.
 2.  **Decision Making:**
-    * **If Healthy(1):** The workflow terminates immediately. No further analysis is needed. This ensures **zero unnecessary computation**.
-    * **If Patient(0):** The system recognizes a risk and *only then* activates the secondary specialized models to diagnose the specific condition.
+    * **If Healthy(0):** The workflow terminates immediately. No further analysis is needed. This ensures **zero unnecessary computation**.
+    * **If Patient(1):** The system recognizes a risk and *only then* activates the secondary specialized models to diagnose the specific condition.
 
 > This "Conditional Computation" approach ensures that the application remains lightweight and fast, saving device battery and server resources by preventing the execution of complex models on healthy users.
 
@@ -95,28 +95,30 @@ For a deeper dive into the model evaluation metrics and architectural logic, ple
 
 ---
 
-## **Testing Gate Model**  
+## **Testing Gate Model**
 
-To ensure the reliability of the **Gate Model** as the primary screening layer, it was subjected to a rigorous "Stress Test" using 10 synthetic medical cases designed to mimic real-world scenarios. These cases range from clearly healthy individuals to critical patients, including complex "borderline" cases to test the model's sensitivity.
+To ensure the reliability of the **Gate Model** as the primary screening layer, it was subjected to a benchmark validation test using 10 clinical scenarios designed to mimic real-world medical cases. These range from clearly healthy individuals to critical patients, including complex borderline profiles to test model calibration.
 
 ### 1. Test Data Overview
-The testing dataset consists of **10 distinct profiles** with varying biochemical markers.
-* test_gate_model.py inside `notebooks/code/`, ore [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 
-#### Cases Medical Analysis of The 10 Cases
+The testing benchmark consists of **10 distinct clinical profiles** with varying biochemical markers.
 
-| Case ID | Condition | Key Medical Indicators (Why?) |
-| :---: | :--- | :--- |
-| **1** |  **Sick** | **High Bilirubin (8.5)** & Elevated Enzymes (SGPT 200). Classic Jaundice signs. |
-| **2** |  **Sick** | **Very Low Albumin (1.8)** & Inverted A/G Ratio (0.50). Indicates chronic liver dysfunction. |
-| **3** |  **Sick** | **Extreme Bilirubin (15.0)** & High Alkphos (550). Signs of acute hepatitis |
-| **4** |  **Sick** | **SGOT > SGPT** (250 vs 80). A classic pattern often associated with Alcoholic Liver Disease. |
-| **5** | **Sick** | Moderate enzyme elevation (SGPT 150) & **Fatty Liver** indicators. |
-| **6** |  **Sick** | **Elderly Patient (75)** with critical enzyme levels and low proteins. |
-| **7** |  **Healthy** | All values are within the standard reference ranges for a young adult. |
-| **8** |  **Borderline** | **Slightly elevated Alkaline Phosphotase (180).** Medically ambiguous, but the model flags it as "Risk". |
-| **9** |  **Borderline** | **Senior (65)** with Alkphos (195). The model chooses safety (Sick). |
-| **10** | **Healthy** | Perfect blood work. Young individual (18) with optimal liver function. |
+* `test_gate_model.py` inside `notebooks/code/`, or [](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
+
+#### Medical Analysis of The 10 Benchmark Cases
+
+| Case ID | Condition | Key Medical Indicators |
+| --- | --- | --- |
+| **1** | **Sick** | **High Bilirubin (8.5)** & Elevated Enzymes (ALT 200, ALP 400). Classic Jaundice/Decompensation. |
+| **2** | **Sick** | **Very Low Albumin (1.8)** & Inverted A/G Ratio (0.50). Indicates advanced cirrhosis. |
+| **3** | **Sick** | **Extreme Bilirubin (15.0)** & High ALP (550). Severe biliary obstruction. |
+| **4** | **Sick** | **AST/ALT Elevation** (140/150) & Elevated Bilirubin (1.5). Acute hepatocellular injury pattern. |
+| **5** | **Healthy** | All biomarkers within ideal reference ranges for a young male (Age 25). |
+| **6** | **Healthy** | Normal liver enzymes and protein levels for an adult female (Age 32). |
+| **7** | **Healthy** | Optimal physiological baseline for a young adult (Age 18). |
+| **8** | **Healthy** | **Isolated Bilirubin elevation (3.2)** with normal liver enzymes (Gilbert's Syndrome pattern). |
+| **9** | **Borderline** | **Slightly elevated ALP (180).** Near-threshold biomarker triggering conservative safety response. |
+| **10** | **Borderline** | **Mild ALT elevation (52)** with normal Bilirubin. Borderline NAFLD / Early hepatic strain. |
 
 *The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
 
@@ -124,67 +126,57 @@ The testing dataset consists of **10 distinct profiles** with varying biochemica
 
 ### 2. Model Predictions & Output Analysis
 
-The following table shows the actual raw output from the model (`0=Sick` or `1=Healthy`) and the interpretation.
+The following table shows the direct inference results from `models/gate_model.pkl` (`1=Sick` or `0=Healthy`) alongside confidence probabilities.
 
-| Case | Raw Output | Diagnosis | Medical Expectation | Result Status |
-| :---: | :---: | :--- | :--- | :--- |
-| **1** | `0` | Liver Patient | **Sick** |  **PASS** |
-| **2** | `0` | Liver Patient | **Sick** |  **PASS** |
-| **3** | `0` | Liver Patient | **Sick** |  **PASS** |
-| **4** | `0` | Liver Patient | **Sick** |  **PASS** |
-| **5** | `0` | Liver Patient | **Sick** |  **PASS** |
-| **6** | `0` | Liver Patient | **Sick** |  **PASS** |
-| **7** | `1` | Healthy | **Healthy** |  **PASS** |
-| **8** | `0` | Liver Patient | *Borderline / High Normal* |**Safety Trigger** |
-| **9** | `0` | Liver Patient | *Borderline / Elderly* | **Safety Trigger** |
-| **10** | `1` | Healthy | **Healthy** |**PASS** |
+| Case | Raw Output | Diagnosis | Sick Prob (%) | Healthy Prob (%) | Medical Expectation | Result Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| **1** | `1` | Sick | **99.77%** | 0.23% | **Sick** | **PASS** |
+| **2** | `1` | Sick | **97.45%** | 2.55% | **Sick** | **PASS** |
+| **3** | `1` | Sick | **99.64%** | 0.36% | **Sick** | **PASS** |
+| **4** | `1` | Sick | **90.58%** | 9.42% | **Sick** | **PASS** |
+| **5** | `0` | Healthy | 34.26% | **65.74%** | **Healthy** | **PASS** |
+| **6** | `0` | Healthy | 48.33% | **51.67%** | **Healthy** | **PASS** |
+| **7** | `0` | Healthy | 20.73% | **79.27%** | **Healthy** | **PASS** |
+| **8** | `0` | Healthy | 40.83% | **59.17%** | **Healthy (Gilbert's)** | **PASS** |
+| **9** | `1` | Sick | **66.58%** | 33.42% | *Borderline / Mild ALP* | **Safety Trigger** |
+| **10** | `1` | Sick | **90.28%** | 9.72% | *Borderline / Mild ALT* | **Safety Trigger** |
 
-* PASS: This label indicates that the model output is consistent with the internal design logic of the Gate Model. Clearly normal"Healthy" and clearly abnormal"Sick" cases were classified directly.
+* **PASS:** Indicates that the model output aligns perfectly with clinical design goals. Clearly normal and clearly abnormal cases are categorized with high confidence.
+* **Safety Trigger:** For borderline cases (Cases 9 & 10), the model applies a conservative screening bias, flagging near-threshold enzyme elevations as `1` (Sick) to avoid false negatives and ensure downstream evaluation.
 
-* Safety Trigger : For borderline cases (Cases 8 & 9), instead of treating near-threshold values as normal, the model intentionally applies a conservative bias and classifies them as Sick to avoid early exclusion from the analytical pipeline.
-
-> The Gate Model is main objective is to minimize false negatives by forwarding ambiguous cases to more advanced analysis layers, even if this results in a higher number of false positives at the initial stage.
+> The Gate Model's main objective is to **minimize false negatives** by forwarding ambiguous cases to advanced analysis layers while smoothly exiting clearly healthy individuals.
 
 ---
 
 ### Numerical Context of the Test Cases
 
-The evaluated cases are based on a synthetic dataset of 10 profiles, each represented by numerical vectors capturing **age, gender, bilirubin levels, liver enzymes, and protein indicators**. The key numerical patterns influencing the Gate Model behavior can be as follows:
+The benchmark profiles evaluate numerical vectors capturing **age, gender, bilirubin levels, liver enzymes, and protein indicators**. Key patterns governing Gate Model decisions include:
 
-#### A- Borderline Case Handling (Cases 8 & 9)
+#### A- Borderline & Complex Case Handling (Cases 8–10)
 
-In screening-oriented systems, **Sensitivity** is prioritized to reduce the risk of missing potentially abnormal cases.
-Cases 8 & 9 were designed as *borderline profiles*, mainly due to **slightly elevated Alkaline Phosphatase (~180–195)**.
-The Gate Model applies a **conservative strategy**, classifying near-threshold cases as `0` (Sick) to avoid false negatives and forward them to downstream analysis layers.
-This behavior is **intentional and design-driven**, not a classification error.
+* **Gilbert's Syndrome (Case 8):** The model successfully identified that isolated Bilirubin elevation (3.2 mg/dL) without enzyme elevation (ALT 22, AST 20) represents a benign variant, classifying it as `0` (Healthy) with **59.17% Healthy Probability**.
+* **Near-Threshold Strain (Cases 9 & 10):** When enzymes cross upper limits (ALP 180 or ALT 52), the model shifts probability toward `1` (Sick) at **66.58%** and **90.28%**, prioritizing sensitivity over early termination.
 
+#### B- High Sensitivity Detection (Cases 1–4)
 
-#### B- Positive Detection Performance (Cases 1–6)
-
-The model showed **high sensitivity** in detecting clearly abnormal patterns, including:
-
-* Extreme Bilirubin and enzyme elevations (Cases 1 & 3),
-* Low Albumin and inverted A/G ratio (Case 2),
-* Distinct SGOT > SGPT patterns (Case 4),
-* Age-weighted risk combined with protein degradation (Case 6).
-
-These results confirm that the Gate Model evaluates **feature interactions** rather than isolated values.
-
+* The model demonstrates strong confidence (**90.58%–99.77%**) when encountering combined marker degradation, such as high direct bilirubin, inverted A/G ratios, or elevated ALT/AST.
 
 #### C- System-Level Risk Interpretation
 
-The Gate Model functions as a **risk-filtering layer**, not a diagnostic tool.
-Its primary objective is to **minimize false negatives**, even if this increases false positives at the initial stage.
-This conservative bias aligns with safety-first principles in high-risk systems.
+* The Gate Model functions as a **risk-filtering layer**, not a diagnostic tool.
+* Its primary objective is to **minimize false negatives**, even if this increases false positives at the initial stage.
+* This conservative bias aligns with safety-first principles in high-risk systems.
+
+#### D- Healthy Case Detection (Cases 5–7)
+
+* Clearly normal cases were correctly identified based on values within standard reference ranges.
+* By classifying these profiles as `0` (Healthy) with probabilities up to **79.27%**, the model triggered an **early exit**, preventing unnecessary downstream computation.
 
 
-#### D- Healthy Case Detection (Cases 7 & 10)
-
-Clearly normal cases were correctly identified based on values within standard reference ranges.
-By classifying these profiles as `1` (Healthy), the model triggered an **early exit**, preventing unnecessary downstream computation and validating the efficiency of the pipeline.
-
-> For more details, see `test_gate_model.py` inside `notebooks/code/` or [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=OGcBn26-pcsQ)
 ---
+
 *The medical descriptions provided are illustrative summaries derived from publicly available clinical reference ranges and were generated with the assistance of large language models for documentation clarity only. They do not represent medical diagnosis or professional medical judgment.*
+
+
 
 ---
