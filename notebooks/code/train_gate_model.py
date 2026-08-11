@@ -1,33 +1,25 @@
 """
-[IMPORTANT NOTE / ملاحظة هامة]
---------------------------------------------------
-English: This script is specifically designed and optimized to run in the GOOGLE COLAB environment.
-- It is configured to automatically download models and training files directly from GitHub.
-- Copy-pasting this code to other environments (local IDEs) may require adjustments 
-  to file paths and library configurations.
-
-Arabic: Google Colab هذا الكود مخصص ومجهز للعمل مباشرة داخل بيئة 
-- GitHub لضمان التشغيل الفوري تم إعداد الكود ليقوم بتحميل النماذج وملفات التدريب تلقائياً من 
-- نسخ هذا الكود وتشغيله في تطبيقات أو بيئات أخرى قد يتطلب تعديلات في مسارات الملفات وإعدادات المكتبات.
---------------------------------------------------
-Created by: Yahya Zuher
+AI Liver Disease Diagnosis System - Gate Model Training Pipeline
+----------------------------------------------------------------
+Target: Gate Model Binary Classification (1 = Sick/Patient, 0 = Healthy)
+Author: Yahya Zuher
 Project: AI-Liver-Diseases-Diagnosis-System
-
-    - Target: Ascites (0 = Healthy, 1 = Patient)
 """
 
-import pandas as pd
-import xgboost as xgb
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.preprocessing import LabelEncoder
-import joblib
 import os
 import sys
+import joblib
+import pandas as pd
+import xgboost as xgb
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Configuration
 DATASET_FILENAME = 'Liver_Patient_Dataset_Cleaned_19k.csv'
 MODEL_FILENAME = 'gate_model.pkl'
+CONFUSION_MATRIX_FILENAME = 'confusion_matrix_gate.png'
 
 # Direct link to the raw CSV file on GitHub
 GITHUB_RAW_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/Liver_Patient_Dataset_Cleaned_19k.csv'
@@ -35,10 +27,8 @@ GITHUB_RAW_URL = 'https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases
 def download_dataset_if_missing():
     if not os.path.exists(DATASET_FILENAME):
         try:
-            print(f"Dataset not found locally. Downloading from {GITHUB_RAW_URL}...")
-            # Read CSV directly from the raw GitHub URL
+            print("Dataset not found locally. Downloading from https://raw.githubusercontent.com/yahyazuher/AI-Liver-Diseases-Diagnosis-System/main/data/processed/Liver_Patient_Dataset_Cleaned_19k.csv...")
             df = pd.read_csv(GITHUB_RAW_URL)
-            # Save to local disk for future runs
             df.to_csv(DATASET_FILENAME, index=False)
             print("Download successful. Dataset saved locally.")
         except Exception as e:
@@ -52,56 +42,80 @@ def train_liver_prediction_model():
     download_dataset_if_missing()
 
     print("Loading dataset...")
-    df = pd.read_csv(DATASET_FILENAME)
+    df = pd.read_csv(DATASET_FILENAME).dropna()
 
-    # Remove any inadvertent missing values
-    df = df.dropna()
+    # 2. Clean Feature Names & Enforce Standard Column Mapping
+    doc_features = [
+        'Age', 'Gender', 'Total_Bilirubin', 'Direct_Bilirubin', 
+        'ALP', 'ALT', 'AST', 'Total_Protiens', 
+        'Albumin', 'Albumin_and_Globulin_Ratio'
+    ]
+    
+    # Strip hidden non-breaking spaces (\xa0) and align feature names
+    df.columns = [col.replace('\xa0', '').strip() for col in df.columns]
+    df.columns = doc_features + ['Target']
 
-    # Separate features (X) and target variable (y)
-    X = df.iloc[:, :-1]
-    y = df.iloc[:, -1]
+    # 3. Explicit Data Encoding
+    # Gender Encoding: Male = 1, Female = 0
+    if df['Gender'].dtype == object or str(df['Gender'].dtype) == 'category':
+        df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 0, 'M': 1, 'F': 0})
 
-    # 2. Label Encoding
-    # Transforms target labels: 1 (Patient) -> 0, 2 (Healthy) -> 1
-    le = LabelEncoder()
-    y = le.fit_transform(y)
+    # Target Mapping: Medical Standard (1 = Sick/Patient, 0 = Healthy)
+    if set(df['Target'].unique()) == {1, 2}:
+        df['Target'] = df['Target'].map({1: 1, 2: 0})
 
-    # 3. Train-Test Split
-    # Stratify ensures the training and test sets have the same proportion of class labels
+    X = df[doc_features]
+    y = df['Target']
+
+    # 4. Stratified Train-Test Split (80/20)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    # 4. Model Initialization
+    # 5. Model Initialization
     print("Training XGBoost Classifier...")
-    # Hyperparameters are set to prevent overfitting on the cleaned dataset
     model = xgb.XGBClassifier(
         n_estimators=200,
-        learning_rate=0.05,
-        max_depth=4,
-        subsample=0.8,
-        colsample_bytree=0.8,
+        learning_rate=0.04,
+        max_depth=5,
+        subsample=0.85,
+        colsample_bytree=0.85,
         eval_metric='logloss',
         random_state=42
     )
 
-    # 5. Model Training
+    # 6. Model Training
     model.fit(X_train, y_train)
 
-    # 6. Evaluation
+    # 7. Evaluation
     print("Evaluating Model Performance...")
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
 
-    print("-" * 40)
+    print("-" * 50)
     print(f"Accuracy: {accuracy * 100:.2f}%")
-    print("-" * 40)
+    print("-" * 50)
     print(classification_report(y_test, y_pred))
 
-    # 7. Serialization
-    # Save the trained model to a file
+    # 8. Confusion Matrix Visualization
+    cm = confusion_matrix(y_test, y_pred)
+
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=True,
+                xticklabels=['Class 0', 'Class 1'],
+                yticklabels=['Class 0', 'Class 1'])
+
+    plt.title('Confusion Matrix: Gate Model (Liver Disease)', fontsize=14, pad=20)
+    plt.ylabel('Actual Label', fontsize=12)
+    plt.xlabel('Predicted Label', fontsize=12)
+
+    print(f"Saving confusion matrix to {CONFUSION_MATRIX_FILENAME}...")
+    plt.savefig(CONFUSION_MATRIX_FILENAME, dpi=300, bbox_inches='tight')
+    plt.show()
+
+    # 9. Serialization (Saving only gate_model.pkl)
     joblib.dump(model, MODEL_FILENAME)
-    print(f"Model saved successfully: {MODEL_FILENAME}")
+    print(f"Model saved successfully: '{MODEL_FILENAME}'")
 
 if __name__ == "__main__":
     train_liver_prediction_model()
