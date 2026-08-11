@@ -65,10 +65,10 @@ The system is designed with a **resource-efficient workflow**. Instead of runnin
 graph TD
     Input[User Blood Data] --> Gate{Gate Model}
     
-    Gate -- Predicted: Healthy(1) --> Stop((Stop Process))
+    Gate -- Predicted: Healthy(0) --> Stop((Stop Process))
     Stop -.-> Msg[User is Healthy]
     
-    Gate -- Predicted: Patient(0) --> Trigger[Activate Sub-Models]
+    Gate -- Predicted: Patient(1) --> Trigger[Activate Sub-Models]
     
     subgraph "Advanced Analysis Layer"
     Trigger --> M1[Hepatitis C Analysis]
