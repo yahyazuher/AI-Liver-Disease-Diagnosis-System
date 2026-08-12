@@ -27,7 +27,7 @@ The system's efficiency depends on a data split of **80% for training** and **20
 
 > This split adheres to the "Golden Standard" for building a robust "Smart System." Crucially, this model was trained on a **de-duplicated dataset** (reduced from 30k to 19k rows) to prevent "Data Leakage" and ensure the model learns actual patterns rather than memorizing repeated entries (for more info about ML: `docs/XGBoost.md`).
 
-
+> **Note on Final Model Deployment:** The 80/20 train-test split was utilized strictly during the validation phase to evaluate real-world generalization and performance metrics. Following verification, the final serialized model (`.pkl`) was retrained on **100% of the cleaned dataset (~19,000 records)** to maximize statistical coverage and feature weight stability for real-world inference.
 ---
 
 ### 1- Data Source and Integrity
