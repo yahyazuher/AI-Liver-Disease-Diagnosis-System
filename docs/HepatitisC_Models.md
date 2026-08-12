@@ -40,9 +40,10 @@ After completing the training on  records and testing on  unseen records, the mo
 | **`hepatitiC_status_model.pkl`** | $71.43\%$ % | Moderate-High Reliability |
 | **`hepatitisC_stage_model.pkl`** | $62.50\%$ % | Academic Use |
 
+
 The logic used to generate these results, including the $80/20$ split and XGBoost configurations, can be found in the source script: `notebooks/code/train_HC_models` or executed directly via the Colab environment: [![Open In Colab](https://img.shields.io/badge/Open%20In%20Colab-black?style=flat&logo=googlecolab&logoColor=white)](https://colab.research.google.com/drive/1sr0GzN9SEN2H5wC3t0REaPVXUMlFYzfG#scrollTo=3oQ6HJTl0F1V)
 
-
+> **Note:** The performance metrics above reflect evaluation on the hold-out test set. The final serialized `.pkl` models stored in `models/` were subsequently retrained on the complete (100%) dataset to optimize feature weight distribution.
 ---
 
 ##  **Data Pipeline & Feature Engineering**
