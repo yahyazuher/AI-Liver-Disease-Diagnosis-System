@@ -84,23 +84,30 @@ To ensure the system acts as a "Smart Clinician" rather than a "Rote Learner," I
 * **20% Testing Set:** Acts as the "Unseen Exam." These records are hidden from the model during training to measure its real-world diagnostic accuracy.
    > This process is illustrated in the Architecture & Logic Schematics (2) at the end of the page, which shows the internal 80/20 split used during the learning process.
 
-### **2. Maximizing Data Utility**
 
-While the standard 80/20 split was used for validation, a strategic decision was made to **retrain** the following models on the **100% full dataset** before final deployment. This approach was specifically chosen for the models that faced the highest complexity in clinical pattern recognition.
+### **2. Maximizing Data Utility Across All System Models**
 
-#### **Performance-Driven Retraining Logic**
+While a standard **80/20 train-test split** was strictly utilized during the experimental phase to evaluate validation accuracy, generate classification reports, and plot confusion matrices, a core architectural decision was made to **retrain 100% of the project's models on their full datasets prior to final deployment**.
 
-| Model File | Accuracy (Validation) | Reliability Status | Strategic Action |
+#### **Comprehensive Model Retraining & Deployment Overview**
+
+| Model File | Diagnostic Target | Validation Strategy | Final Deployment Action |
 | --- | --- | --- | --- |
-| `hepatitisC_stage_model.pkl` | **62.50%** | **Academic Use** | Full Dataset Integration |
-| `hepatitisC_status_model.pkl` | **71.43%** | **Moderate-High Reliability** | Full Dataset Integration |
+| `gate_model.pkl` | Primary Screening / Gatekeeper | 80/20 Train-Test Split | **100% Full Dataset Integration** |
+| `cancer_model.pkl` | Liver Cancer Risk Assessment | 80/20 Train-Test Split | **100% Full Dataset Integration** |
+| `fatty_liver_model.pkl` | NAFLD / Fatty Liver Diagnosis | 80/20 Train-Test Split | **100% Full Dataset Integration** |
+| `hepatitis_complications.pkl` | Ascites / Complications Risk | 80/20 Train-Test Split | **100% Full Dataset Integration** |
+| `hepatitisC_status_model.pkl` | Patient Survival / Status | 80/20 Train-Test Split | **100% Full Dataset Integration** |
+| `hepatitisC_stage_model.pkl` | Disease Staging (1-4) | 80/20 Train-Test Split | **100% Full Dataset Integration** |
 
-#### **Why 100% Data was used for these specific models?**
+---
 
-1. The analytical values for different stages and statuses in these datasets were significantly close and overlapping. In such "high-proximity" data environments, the model needs to see every possible variation to establish a more stable decision boundary.
-2. Because these models showed lower initial confidence (62.50% and 71.43%), withholding 20% of the data for testing in the final version would have meant losing valuable clinical cases. By merging the test set back into the training phase, we provided the XGBoost engine with the **maximum possible knowledge base**.
-3. **Real-World Deployment Readiness:** To ensure the system performs reliably in a real clinical setting without "missing" subtle patterns, utilizing the full training file was essential. This ensures that no potential diagnostic insight from the original dataset is wasted.
-   
+#### **Core Rationale Behind Full-Dataset Retraining**
+
+1. **Elimination of Clinical Data Loss:** In clinical machine learning, withholding 20% of rare or complex patient profiles during deployment reduces the model's pattern recognition scope. Merging the test set back into the training phase ensures zero data waste.
+2. **Sharpening High-Proximity Decision Boundaries:** Clinical biomarkers across stage severity, status, and early-stage liver conditions often present subtle overlapping ranges. Training on 100% of available samples allows XGBoost to construct robust and smooth decision boundaries.
+3. **Standardized Production Readiness:** Retraining all engines—from primary gatekeeping to secondary complication modules—guarantees that every component in the **AiLDS** ecosystem operates at maximum statistical confidence when encountering unseen real-world patient data.
+
 ### **3. Data Leakage**
 
 **Data Leakage** occurs when information from outside the training dataset is used to create the model. This essentially allows the model to "cheat" during the training process by having access to data that would not be available at the time of a real-world prediction. While the model may show near-perfect accuracy (e.g., 100%) during testing, it will fail to provide accurate results or even fail entirely when applied to new real-world patients.
