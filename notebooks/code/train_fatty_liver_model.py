@@ -15,7 +15,6 @@ Project: AI-Liver-Diseases-Diagnosis-System
 
     - Target: Ascites (0 = Healthy, 1 = PATIENT (NAFLD))
 """
-
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -24,6 +23,12 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import pickle
+
+# =================================================================
+# Fatty Liver (NAFLD) Diagnostic Module
+# Project: AI-Liver-Diseases-Diagnosis-System
+# Author: Yahya Zuher
+# =================================================================
 
 print("--- Initializing Fatty Liver (NAFLD) Diagnostic System ---")
 
@@ -81,21 +86,22 @@ y = df['Diagnosis']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # ---------------------------------------------------------
-# 5. Model Training (Optimized XGBoost)
+# 5. Model Training (Optimized XGBoost on 80%)
 # ---------------------------------------------------------
-print("\nTraining diagnostic model on clinical biomarkers...")
+print("\nTraining diagnostic model on clinical biomarkers (80% train set)...")
 model = xgb.XGBClassifier(
     n_estimators=100,
     learning_rate=0.1,
     max_depth=4,
     subsample=0.8,
     eval_metric='logloss',
+    random_state=42
 )
 
 model.fit(X_train, y_train)
 
 # ---------------------------------------------------------
-# 6. Evaluation & Statistical Metrics
+# 6. Evaluation & Statistical Metrics (20% Test Set)
 # ---------------------------------------------------------
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
@@ -106,7 +112,6 @@ print("Detailed Classification Performance:")
 print(classification_report(y_test, y_pred))
 
 # Visualizing Confusion Matrix
-
 plt.figure(figsize=(7, 5))
 cm = confusion_matrix(y_test, y_pred)
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False)
@@ -116,10 +121,19 @@ plt.ylabel('Actual Label')
 plt.show()
 
 # ---------------------------------------------------------
-# 7. Model Serialization (Pickle Export)
+# 7. Final Retraining on 100% Data & Model Serialization
 # ---------------------------------------------------------
+print("\n" + "="*50)
+print("Retraining model on 100% of the dataset for final deployment...")
+model.fit(X, y)
+print("✔ Retraining completed on all samples.")
+
 MODEL_EXPORT_NAME = "fatty_liver_model.pkl"
 with open(MODEL_EXPORT_NAME, "wb") as f:
+    pickle.dump(model, f)
+
+print(f"✔ Module finalized and saved as: {MODEL_EXPORT_NAME}")
+print("="*50)
     pickle.dump(model, f)
 
 print(f"\n✔ Module finalized and saved as: {MODEL_EXPORT_NAME}")
