@@ -23,12 +23,12 @@ This section is dedicated to the detection of **Non-Alcoholic Fatty Liver Diseas
 The model's exceptional performance is derived from a strategic data split of **80% for training** and **20% for testing**, which resulted in a final predictive accuracy of **99.98%**. This high level of precision ensures that the diagnostic logic is consistently applied across the entire population.
 
 * **Total Clean Records:** **6,533 patients** (After rigorous cleaning and removing missing values).
-* **Training Data:** The model was trained on **5,226 patients** from the `FattyLiver.csv` dataset to learn complex metabolic patterns.
+* **Training Data:** The model was trained firstly on **5,226 patients** from the `FattyLiver.csv` dataset to learn complex metabolic patterns.
 * **Testing Data:** A holdout set of **1,307 patients** was reserved to validate the model's accuracy on unseen clinical data.
 * **Class Distribution:** The dataset contains **5,877 Healthy** cases and **656 NAFLD** cases, demonstrating the model's ability to identify the minority "Patient" class with high sensitivity.
 
-> (For more details about ML model, see:  [`docs/XGBoost.md`](./XGBoost.md). 
 
+> **Note on Final Model Deployment:** The 99.98% accuracy metric reflects evaluation on the independent 20% test subset. Following validation, the production model (`models/fatty_liver_model.pkl`) was retrained on 100% of the cleaned dataset to leverage all available patient records. for more details about the ML model, see: [`docs/XGBoost.md`](./XGBoost.md)).
 ---
 ### Data Engineering & Integration Strategy
 
