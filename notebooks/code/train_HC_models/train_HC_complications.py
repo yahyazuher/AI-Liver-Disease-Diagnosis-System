@@ -65,9 +65,8 @@ def train_model():
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    # 4. Handle Class Imbalance (Calculate Ratio)
-    # This ensures the model pays attention to the minority class (Ascites cases)
-    ratio = float(len(y_train[y_train == 0])) / len(y_train[y_train == 1])
+    # 4. Handle Class Imbalance (Calculate Ratio for 80% train set)
+    ratio_train = float(len(y_train[y_train == 0])) / len(y_train[y_train == 1])
 
     # 5. Initialize XGBoost Classifier
     model = xgb.XGBClassifier(
@@ -76,16 +75,16 @@ def train_model():
         max_depth=4,            # Tree depth (prevent overfitting)
         subsample=0.8,          # Data sampling ratio per tree
         colsample_bytree=0.8,   # Feature sampling ratio
-        scale_pos_weight=ratio, # Automatically balance classes
+        scale_pos_weight=ratio_train, # Automatically balance classes
         eval_metric='logloss',
         random_state=42
     )
 
-    # 6. Train
-    print(" Training XGBoost model...")
+    # 6. Train on 80%
+    print(" Training XGBoost model on 80% split...")
     model.fit(X_train, y_train)
 
-    # 7. Evaluate
+    # 7. Evaluate on 20%
     y_pred = model.predict(X_test)
     acc = accuracy_score(y_test, y_pred) * 100
 
@@ -97,36 +96,37 @@ def train_model():
     # ================================================================
     # SECTION: CONFUSION MATRIX VISUALIZATION
     # ================================================================
-    # Note: The Confusion Matrix provides a granular view of prediction performance.
-    # In clinical diagnostics, this is critical for distinguishing between:
-    # - False Negatives: Missing a case of Ascites (High Risk).
-    # - False Positives: Incorrectly flagging a healthy patient (Anxiety/Cost).
-    # The heatmap below visualizes these metrics using the Test Set.
-    # ================================================================
-    
     cm = confusion_matrix(y_test, y_pred)
-    
+
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=True,
                 xticklabels=['No Ascites', 'Ascites'],
                 yticklabels=['No Ascites', 'Ascites'])
-    
+
     plt.title('Confusion Matrix: Ascites Prediction', fontsize=14, pad=20)
     plt.ylabel('Actual Clinical Status', fontsize=12)
     plt.xlabel('Model Prediction', fontsize=12)
-    
+
     print(f" Saving confusion matrix to {CONFUSION_MATRIX_FILENAME}...")
     plt.savefig(CONFUSION_MATRIX_FILENAME, dpi=300, bbox_inches='tight')
     plt.show()
-    
-    # ================================================================
-    # END VISUALIZATION
-    # ================================================================
 
-    # 8. Save
+    # ================================================================
+    # 8. Retrain on 100% Data & Save
+    # ================================================================
+    print("\n" + "="*50)
+    print(" Retraining model on 100% of dataset for deployment...")
+    
+    # Recalculate balance ratio for the entire dataset
+    full_ratio = float(len(y[y == 0])) / len(y[y == 1])
+    model.set_params(scale_pos_weight=full_ratio)
+    model.fit(X, y)
+    print("✔ Retraining completed on all records.")
+
     print(f" Saving model to {MODEL_FILENAME}...")
     joblib.dump(model, MODEL_FILENAME)
     print(f" Model saved successfully.")
+    print("="*50)
 
 if __name__ == "__main__":
     train_model()
