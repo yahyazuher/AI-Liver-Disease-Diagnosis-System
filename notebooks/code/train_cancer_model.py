@@ -17,6 +17,8 @@ Project: AI-Liver-Diseases-Diagnosis-System
     - Result is between 0.0 and 1.0
 
 """
+
+
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -25,6 +27,11 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+
+# =================================================================
+# Project: AI-Liver-Diseases-Diagnosis-System
+# Author: Yahya Zuher
+# =================================================================
 
 print("--- Initializing Liver Cancer Risk Assessment System ---")
 
@@ -60,19 +67,20 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # ---------------------------------------------------------
 # 3. Model Training (XGBoost Classifier)
 # ---------------------------------------------------------
-print("\nTraining XGBoost model on diagnostic patterns...")
+print("\nTraining XGBoost model on diagnostic patterns (80% train set)...")
 model = xgb.XGBClassifier(
     n_estimators=100,
     learning_rate=0.1,
     max_depth=3,
     subsample=0.8,
     eval_metric='logloss',
+    random_state=42
 )
 
 model.fit(X_train, y_train)
 
 # ---------------------------------------------------------
-# 4. Evaluation & Performance Metrics
+# 4. Evaluation & Performance Metrics (Using 20% Test Set)
 # ---------------------------------------------------------
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
@@ -84,7 +92,6 @@ print("Detailed Classification Report:")
 print(classification_report(y_test, y_pred))
 
 # Visualizing results via Confusion Matrix
-
 plt.figure(figsize=(6, 5))
 cm = confusion_matrix(y_test, y_pred)
 sns.heatmap(cm, annot=True, fmt='d', cmap='Reds', cbar=False)
@@ -94,11 +101,20 @@ plt.ylabel('Actual Diagnosis')
 plt.show()
 
 # ---------------------------------------------------------
-# 5. Model Export for Integration
+# 5. Final Retraining on 100% Data & Export
 # ---------------------------------------------------------
+print("\n" + "="*50)
+print("Retraining model on 100% of the dataset for final deployment...")
+model.fit(X, y)
+print("✔ Retraining completed on all samples.")
+
 # Exporting as a pickle file for use in the AiLDS web application
 MODEL_FILENAME = "cancer_model.pkl"
 with open(MODEL_FILENAME, "wb") as file:
+    pickle.dump(model, file)
+
+print(f"✔ Model successfully serialized as: {MODEL_FILENAME}")
+print("="*50)
     pickle.dump(model, file)
 
 print(f"\n✔ Model successfully serialized as: {MODEL_FILENAME}")
